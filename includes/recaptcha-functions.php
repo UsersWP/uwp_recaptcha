@@ -4,28 +4,26 @@ function uwp_recaptcha_init() {
 
     global $uwp_options;
 
-    $admin = is_admin();
-
     if ( uwp_recaptcha_check_role() ) { // disable captcha as per user role settings
         return;
     }
     // registration form
-    if ( !$admin && $uwp_options['enable_recaptcha_in_register_form'] == '1' ) {
+    if ( isset($uwp_options['enable_recaptcha_in_register_form']) && $uwp_options['enable_recaptcha_in_register_form'] == '1' ) {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_register' );
     }
 
     // login form
-    if ( !$admin && $uwp_options['enable_recaptcha_in_login_form'] == '1' ) {
+    if ( isset($uwp_options['enable_recaptcha_in_login_form']) && $uwp_options['enable_recaptcha_in_login_form'] == '1' ) {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_login' );
     }
 
     // forgot form
-    if ( !$admin && $uwp_options['enable_recaptcha_in_forgot_form'] == '1' ) {
+    if ( isset($uwp_options['enable_recaptcha_in_forgot_form']) && $uwp_options['enable_recaptcha_in_forgot_form'] == '1' ) {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_forgot' );
     }
 
     // account form
-    if ( !$admin && $uwp_options['enable_recaptcha_in_account_form'] == '1' ) {
+    if ( isset($uwp_options['enable_recaptcha_in_account_form']) && $uwp_options['enable_recaptcha_in_account_form'] == '1' ) {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_account' );
     }
 
