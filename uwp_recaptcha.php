@@ -122,10 +122,19 @@ class Users_WP_Recaptcha {
 
 }
 
+function activate_uwp_recaptcha() {
+    require_once('includes/class-uwp-recaptcha-activator.php');
+    UWP_ReCaptcha_Activator::activate();
+}
+register_activation_hook( __FILE__, 'activate_uwp_recaptcha' );
+
 
 function init_uwp_recaptcha() {
 
     if ( ! class_exists( 'Users_WP' ) ) {
+        if ( !class_exists( 'Users_WP_Extension_Activation' ) ) {
+            require_once dirname( __FILE__ ) . '/includes/class-ext-activation.php';
+        }
         $activation = new Users_WP_Extension_Activation( plugin_dir_path( __FILE__ ), basename( __FILE__ ) );
         $activation->run();
         return Users_WP_Recaptcha::get_instance();
