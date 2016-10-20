@@ -27,31 +27,35 @@ function uwp_add_recaptcha_settings($uwp_settings) {
         ),
         'enable_recaptcha_in_register_form' => array(
             'id'   => 'enable_recaptcha_in_register_form',
-            'name' => __( 'Enable ReCaptcha in UsersWP Register Form', 'uwp-recaptcha' ),
-            'desc' => __( 'Enable ReCaptcha in UsersWP Register Form.', 'uwp-recaptcha' ),
+            'name' => __( 'Enable ReCaptcha in', 'uwp-recaptcha' ),
+            'desc' => __( 'UsersWP Register Form.', 'uwp-recaptcha' ),
             'type' => 'checkbox',
-            'std'  => '1'
+            'std'  => '1',
+            'class' => 'uwp_label_inline',
         ),
         'enable_recaptcha_in_login_form' => array(
             'id'   => 'enable_recaptcha_in_login_form',
-            'name' => __( 'Enable ReCaptcha in UsersWP Login Form', 'uwp-recaptcha' ),
-            'desc' => __( 'Enable ReCaptcha in UsersWP Login Form.', 'uwp-recaptcha' ),
+            'name' => '',
+            'desc' => __( 'UsersWP Login Form.', 'uwp-recaptcha' ),
             'type' => 'checkbox',
-            'std'  => '1'
+            'std'  => '1',
+            'class' => 'uwp_label_inline',
         ),
         'enable_recaptcha_in_forgot_form' => array(
             'id'   => 'enable_recaptcha_in_forgot_form',
-            'name' => __( 'Enable ReCaptcha in UsersWP Forgot Form', 'uwp-recaptcha' ),
-            'desc' => __( 'Enable ReCaptcha in UsersWP Forgot Form.', 'uwp-recaptcha' ),
+            'name' => '',
+            'desc' => __( 'UsersWP Forgot Form.', 'uwp-recaptcha' ),
             'type' => 'checkbox',
-            'std'  => '1'
+            'std'  => '1',
+            'class' => 'uwp_label_inline',
         ),
         'enable_recaptcha_in_account_form' => array(
             'id'   => 'enable_recaptcha_in_account_form',
-            'name' => __( 'Enable ReCaptcha in UsersWP Account Form', 'uwp-recaptcha' ),
-            'desc' => __( 'Enable ReCaptcha in UsersWP Account Form.', 'uwp-recaptcha' ),
+            'name' => '',
+            'desc' => __( 'UsersWP Account Form.', 'uwp-recaptcha' ),
             'type' => 'checkbox',
-            'std'  => '1'
+            'std'  => '1',
+            'class' => 'uwp_label_inline',
         ),
     );
 
@@ -64,6 +68,7 @@ function uwp_add_recaptcha_settings($uwp_settings) {
             'name' => ( $count == 1 ? __( 'Disable Google reCAPTCHA for', 'uwp-recaptcha' ) : '' ),
             'desc' => __( $data['name'], 'uwp-recaptcha' ),
             'std' => '0',
+            'class' => 'uwp_label_inline',
             'type' => 'checkbox',
         );
     }

@@ -35,10 +35,10 @@ function uwp_recaptcha_check_role() {
         return false;
     }
 
-    global $current_user;
+    global $current_user, $uwp_options;
     $role = !empty( $current_user ) && isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 
-    if ( $role != '' && (int)get_option( 'uwp_recaptcha_role_' . $role ) == 1 ) { // disable captcha
+    if ( $role != '' && isset($uwp_options['uwp_recaptcha_role_' . $role]) && (int)$uwp_options['uwp_recaptcha_role_' . $role] == 1 ) { // disable captcha
         return true;
     }
     else { // enable captcha
@@ -138,7 +138,6 @@ function uwp_recaptcha_display( $form ) {
 
         $captcha_title = apply_filters( 'uwp_captcha_title', $captcha_title );
 
-        $ajax = ( defined( 'DOING_AJAX' ) && DOING_AJAX );
         $div_id = 'uwp_captcha_' . $form;
         ?>
         <div class="uwp-captcha uwp-captcha-<?php echo $form;?>" style="margin: 7px 0;clear: both;margin-bottom: 15px;">
@@ -150,7 +149,7 @@ function uwp_recaptcha_display( $form ) {
                 <script type="text/javascript">
                     try {
                         var <?php echo $div_id;?> = function() {
-                            if ( ( typeof jQuery != 'undefined' && !jQuery('#<?php echo $div_id;?>').html() ) || '<?php echo $form;?>'=='register' ) {
+                            if ( ( typeof jQuery != 'undefined' && !jQuery('#<?php echo $div_id;?>').html() ) ) {
                                 grecaptcha.render('<?php echo $div_id;?>', { 'sitekey' : '<?php echo $site_key;?>', 'theme' : '<?php echo $captcha_theme;?>' });
                             }
                         }
