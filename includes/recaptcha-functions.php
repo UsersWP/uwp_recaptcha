@@ -2,28 +2,32 @@
 add_action( 'init', 'uwp_recaptcha_init', 0 );
 function uwp_recaptcha_init() {
 
-    global $uwp_options;
-
     if ( uwp_recaptcha_check_role() ) { // disable captcha as per user role settings
         return;
     }
+
+    $enable_register_form = uwp_get_option('enable_recaptcha_in_register_form', false);
+    $enable_login_form = uwp_get_option('enable_recaptcha_in_login_form', false);
+    $enable_forgot_form = uwp_get_option('enable_recaptcha_in_forgot_form', false);
+    $enable_account_form = uwp_get_option('enable_recaptcha_in_account_form', false);
+
     // registration form
-    if ( isset($uwp_options['enable_recaptcha_in_register_form']) && $uwp_options['enable_recaptcha_in_register_form'] == '1' ) {
+    if ( $enable_register_form == '1' ) {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_register' );
     }
 
     // login form
-    if ( isset($uwp_options['enable_recaptcha_in_login_form']) && $uwp_options['enable_recaptcha_in_login_form'] == '1' ) {
+    if ( $enable_login_form == '1' ) {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_login' );
     }
 
     // forgot form
-    if ( isset($uwp_options['enable_recaptcha_in_forgot_form']) && $uwp_options['enable_recaptcha_in_forgot_form'] == '1' ) {
+    if ( $enable_forgot_form == '1' ) {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_forgot' );
     }
 
     // account form
-    if ( isset($uwp_options['enable_recaptcha_in_account_form']) && $uwp_options['enable_recaptcha_in_account_form'] == '1' ) {
+    if ( $enable_account_form == '1' ) {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_account' );
     }
 
@@ -38,7 +42,7 @@ function uwp_recaptcha_check_role() {
     global $current_user;
     $role = !empty( $current_user ) && isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 
-    if ( $role != '' && (int)get_option( 'uwp_recaptcha_role_' . $role ) == 1 ) { // disable captcha
+    if ( $role != '' && (int)uwp_get_option('uwp_recaptcha_role_' . $role, 0) == 1 ) { // disable captcha
         return true;
     }
     else { // enable captcha
@@ -50,8 +54,6 @@ function uwp_recaptcha_check_role() {
 add_action('uwp_validate_result', 'uwp_recaptcha_validate', 10, 2);
 function uwp_recaptcha_validate($result, $type) {
 
-    global $uwp_options;
-
     $errors = new WP_Error();
 
     if ( $type ) {
@@ -60,8 +62,8 @@ function uwp_recaptcha_validate($result, $type) {
             case 'login':
             case 'forgot':
             case 'account':
-                $site_key = $uwp_options['recaptcha_api_key'];
-                $secret_key = $uwp_options['recaptcha_api_secret'];
+                $site_key = uwp_get_option('recaptcha_api_key', '');
+                $secret_key = uwp_get_option('recaptcha_api_secret', '');
 
                 if ( !( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) ) {
                     if (current_user_can('manage_options')) {
@@ -123,14 +125,13 @@ function uwp_recaptcha_form_account() {
 
 function uwp_recaptcha_display( $form ) {
 
-    global $uwp_options;
-    $site_key = $uwp_options['recaptcha_api_key'];
-    $secret_key = $uwp_options['recaptcha_api_secret'];
+    $site_key = uwp_get_option('recaptcha_api_key', '');
+    $secret_key = uwp_get_option('recaptcha_api_secret', '');
 
     if ( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) {
 
-        $captcha_theme = $uwp_options['recaptcha_theme'];
-        $captcha_title = $uwp_options['recaptcha_title'];
+        $captcha_theme = uwp_get_option('recaptcha_theme', '');
+        $captcha_title = uwp_get_option('recaptcha_title', '');
 
 
         $language = uwp_recaptcha_language();
@@ -138,7 +139,6 @@ function uwp_recaptcha_display( $form ) {
 
         $captcha_title = apply_filters( 'uwp_captcha_title', $captcha_title );
 
-        $ajax = ( defined( 'DOING_AJAX' ) && DOING_AJAX );
         $div_id = 'uwp_captcha_' . $form;
         ?>
         <div class="uwp-captcha uwp-captcha-<?php echo $form;?>" style="margin: 7px 0;clear: both;margin-bottom: 15px;">
@@ -150,7 +150,7 @@ function uwp_recaptcha_display( $form ) {
                 <script type="text/javascript">
                     try {
                         var <?php echo $div_id;?> = function() {
-                            if ( ( typeof jQuery != 'undefined' && !jQuery('#<?php echo $div_id;?>').html() ) || '<?php echo $form;?>'=='register' ) {
+                            if ( ( typeof jQuery != 'undefined' && !jQuery('#<?php echo $div_id;?>').html() ) ) {
                                 grecaptcha.render('<?php echo $div_id;?>', { 'sitekey' : '<?php echo $site_key;?>', 'theme' : '<?php echo $captcha_theme;?>' });
                             }
                         }
