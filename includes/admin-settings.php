@@ -1,7 +1,36 @@
 <?php
+add_filter('uwp_display_form_title', 'uwp_recaptcha_display_form_title', 10, 3);
+function uwp_recaptcha_display_form_title($title, $page, $active_tab) {
+    if ($page == 'uwp_recaptcha' && $active_tab == 'main') {
+        $title = __('ReCaptcha Settings', 'uwp-recaptcha');
+    }
+    return $title;
+}
+
+add_action('uwp_recaptcha_settings_main_tab_content', 'uwp_recaptcha_main_tab_content', 10, 1);
+function uwp_recaptcha_main_tab_content($form) {
+    echo $form;
+}
+
+add_action('uwp_admin_sub_menus', 'uwp_add_admin_recaptcha_sub_menu', 10, 1);
+function uwp_add_admin_recaptcha_sub_menu($settings_page) {
+
+    add_submenu_page(
+        "uwp",
+        "ReCaptcha",
+        "ReCaptcha",
+        'manage_options',
+        'uwp_recaptcha',
+        $settings_page
+    );
+
+}
+
 add_filter('uwp_settings_tabs', 'uwp_add_recaptcha_tab');
 function uwp_add_recaptcha_tab($tabs) {
-    $tabs['recaptcha']   = __( 'ReCaptcha', 'uwp-recaptcha' );
+    $tabs['uwp_recaptcha'] = array(
+        'main' => __( 'ReCaptcha', 'uwp-recaptcha' ),
+    );
     return $tabs;
 }
 
@@ -91,7 +120,7 @@ function uwp_add_recaptcha_settings($uwp_settings) {
         )
     );
 
-    $uwp_settings['recaptcha'] = apply_filters( 'uwp_settings_recaptcha', $options);
+    $uwp_settings['uwp_recaptcha']['main'] = apply_filters( 'uwp_settings_recaptcha', $options);
 
     return $uwp_settings;
 }
