@@ -107,7 +107,10 @@ class Users_WP_Recaptcha {
         if ( !class_exists( 'ReCaptcha' ) ) {
             require_once dirname( __FILE__ ) . '/includes/class-recaptcha.php';
         }
-        require_once dirname( __FILE__ ) . '/includes/recaptcha-functions.php';
+
+        if (class_exists( 'Users_WP' )) {
+            require_once dirname( __FILE__ ) . '/includes/recaptcha-functions.php';
+        }
 
         do_action( 'uwp_recaptcha_include_files' );
 

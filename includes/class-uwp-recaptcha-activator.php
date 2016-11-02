@@ -40,6 +40,8 @@ class UWP_ReCaptcha_Activator {
         $settings['enable_recaptcha_in_forgot_form'] = "1";
         $settings['enable_recaptcha_in_account_form'] = "1";
 
+
+        $settings['recaptcha_title'] = "";
         $settings['recaptcha_theme'] = "light";
 
         update_option( 'uwp_settings', $settings );

@@ -120,7 +120,9 @@ function uwp_add_recaptcha_settings($uwp_settings) {
         )
     );
 
-    $uwp_settings['uwp_recaptcha']['main'] = apply_filters( 'uwp_settings_recaptcha', $options);
+    $uwp_settings['uwp_recaptcha'] = array(
+        'main' => apply_filters( 'uwp_settings_recaptcha', $options),
+    );
 
     return $uwp_settings;
 }

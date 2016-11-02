@@ -56,6 +56,30 @@ function uwp_recaptcha_validate($result, $type) {
 
     $errors = new WP_Error();
 
+    if ($type == 'register') {
+        $enable_register_form = uwp_get_option('enable_recaptcha_in_register_form', false);
+        if ( $enable_register_form != '1' ) {
+            return $result;
+        }
+    } elseif ($type == 'login') {
+        $enable_login_form = uwp_get_option('enable_recaptcha_in_login_form', false);
+        if ( $enable_login_form != '1' ) {
+            return $result;
+        }
+    } elseif ($type == 'forgot') {
+        $enable_forgot_form = uwp_get_option('enable_recaptcha_in_forgot_form', false);
+        if ( $enable_forgot_form != '1' ) {
+            return $result;
+        }
+    } elseif ($type == 'account') {
+        $enable_account_form = uwp_get_option('enable_recaptcha_in_account_form', false);
+        if ( $enable_account_form != '1' ) {
+            return $result;
+        }
+    } else {
+        return $result;
+    }
+
     if ( $type ) {
         switch( $type ) {
             case 'register':
@@ -67,7 +91,7 @@ function uwp_recaptcha_validate($result, $type) {
 
                 if ( !( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) ) {
                     if (current_user_can('manage_options')) {
-                        $plugin_settings_link = admin_url( '/users.php?page=users-wp&tab=recaptcha' );
+                        $plugin_settings_link = admin_url( '/admin.php?page=uwp_recaptcha' );
                         $err_msg = sprintf( __( 'To use reCAPTCHA you must get an API key from  <a target="_blank" href="https://www.google.com/recaptcha/admin">here</a> and enter keys in the plugin settings page at <a target="_blank" href="%s">here</a>' ), $plugin_settings_link );
                     } else {
                         $err_msg = __('<strong>Error</strong>: Something went wrong. Please contact site admin.', 'uwp-recaptcha');
@@ -107,20 +131,28 @@ function uwp_recaptcha_validate($result, $type) {
     return $result;
 }
 
-function uwp_recaptcha_form_register() {
-    uwp_recaptcha_display( 'register' );
+function uwp_recaptcha_form_register($type) {
+    if ($type == 'register') {
+        uwp_recaptcha_display( 'register' );
+    }
 }
 
-function uwp_recaptcha_form_login() {
-    uwp_recaptcha_display( 'login' );
+function uwp_recaptcha_form_login($type) {
+    if ($type == 'login') {
+        uwp_recaptcha_display( 'login' );
+    }
 }
 
-function uwp_recaptcha_form_forgot() {
-    uwp_recaptcha_display( 'forgot' );
+function uwp_recaptcha_form_forgot($type) {
+    if ($type == 'forgot') {
+        uwp_recaptcha_display( 'forgot' );
+    }
 }
 
-function uwp_recaptcha_form_account() {
-    uwp_recaptcha_display( 'account' );
+function uwp_recaptcha_form_account($type) {
+    if ($type == 'account') {
+        uwp_recaptcha_display( 'account' );
+    }
 }
 
 function uwp_recaptcha_display( $form ) {
@@ -172,7 +204,7 @@ function uwp_recaptcha_display( $form ) {
             <div class="uwp-captcha-err">
                 <?php
                 if (current_user_can('manage_options')) {
-                    $plugin_settings_link = admin_url( '/users.php?page=users-wp&tab=recaptcha' );
+                    $plugin_settings_link = admin_url( '/admin.php?page=uwp_recaptcha' );
                     echo sprintf( __( 'To use reCAPTCHA you must get an API key from  <a target="_blank" href="https://www.google.com/recaptcha/admin">here</a> and enter keys in the plugin settings page at <a target="_blank" href="%s">here</a>' ), $plugin_settings_link );
                 } else {
                     echo __('<strong>Error</strong>: Something went wrong. Please contact site admin.', 'uwp-recaptcha');
