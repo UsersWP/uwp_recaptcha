@@ -51,7 +51,7 @@ function uwp_recaptcha_check_role() {
 }
 
 
-add_action('uwp_validate_result', 'uwp_recaptcha_validate', 10, 2);
+add_filter('uwp_validate_result', 'uwp_recaptcha_validate', 10, 2);
 function uwp_recaptcha_validate($result, $type) {
 
     $errors = new WP_Error();
@@ -230,3 +230,19 @@ function uwp_recaptcha_language( $default = 'en' ) {
 
     return $language;
 }
+
+function uwp_recaptcha_key_notices() {
+
+    $site_key = uwp_get_option('recaptcha_api_key', false);
+    $secret_key = uwp_get_option('recaptcha_api_secret', false);
+
+    if (empty($site_key) && empty($secret_key)) {
+        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key and API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+    } elseif (empty($site_key)) {
+        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+    } elseif (empty($secret_key)) {
+        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+    }
+
+}
+add_action( 'admin_notices', 'uwp_recaptcha_key_notices' );
