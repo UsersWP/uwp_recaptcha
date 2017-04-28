@@ -16,7 +16,7 @@ add_action('uwp_admin_sub_menus', 'uwp_add_admin_recaptcha_sub_menu', 10, 1);
 function uwp_add_admin_recaptcha_sub_menu($settings_page) {
 
     add_submenu_page(
-        "uwp",
+        "userswp",
         "ReCaptcha",
         "ReCaptcha",
         'manage_options',
@@ -53,6 +53,16 @@ function uwp_add_recaptcha_settings($uwp_settings) {
             'type' => 'text',
             'size' => 'regular',
             'placeholder' => __( 'Enter Google ReCaptcha API Secret', 'uwp-recaptcha' )
+        ),
+        'recaptcha_version' => array(
+            'id' => 'recaptcha_version',
+            'name' => __( 'ReCaptcha version', 'userswp' ),
+            'desc' => __( 'Select the ReCaptcha version. <b style="color: red;">Heads Up! V2 keys will not work with invisible recaptcha, you will have to create new ones.</b>', 'userswp' ),
+            'type' => 'select',
+            'options' => uwp_recpatcha_version_options(),
+            'chosen' => true,
+            'placeholder' => __( 'Select Option', 'userswp' ),
+            'class' => 'uwp_label_block',
         ),
         'enable_recaptcha_in_register_form' => array(
             'id'   => 'enable_recaptcha_in_register_form',
@@ -125,4 +135,17 @@ function uwp_add_recaptcha_settings($uwp_settings) {
     );
 
     return $uwp_settings;
+}
+
+
+function uwp_recpatcha_version_options() {
+    $recaptcha_version_options = array(
+        '' => __( 'Select Option', 'userswp' ), // Blank option
+        'default' =>  __('ReCaptcha V2', 'uwp-recaptcha'),
+        'invisible' =>  __('Invisible ReCaptcha', 'uwp-recaptcha'),
+    );
+
+    $recaptcha_version_options = apply_filters('uwp_recaptcha_version_options', $recaptcha_version_options);
+
+    return $recaptcha_version_options;
 }
