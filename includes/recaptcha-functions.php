@@ -88,6 +88,7 @@ function uwp_recaptcha_validate($result, $type) {
             case 'account':
                 $site_key = uwp_get_option('recaptcha_api_key', '');
                 $secret_key = uwp_get_option('recaptcha_api_secret', '');
+                $captcha_version = uwp_get_option( 'recaptcha_version' );
 
                 if ( !( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) ) {
                     if (current_user_can('manage_options')) {
@@ -159,19 +160,22 @@ function uwp_recaptcha_display( $form ) {
 
     $site_key = uwp_get_option('recaptcha_api_key', '');
     $secret_key = uwp_get_option('recaptcha_api_secret', '');
+    $captcha_version = uwp_get_option( 'recaptcha_version' );
+
+    $div_id = 'uwp_captcha_' . $form;
+
+    $captcha_theme = uwp_get_option('recaptcha_theme', '');
+    $captcha_title = uwp_get_option('recaptcha_title', '');
+
+
+    $language = uwp_recaptcha_language();
+
+
+    $captcha_title = apply_filters( 'uwp_captcha_title', $captcha_title );
 
     if ( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) {
 
-        $captcha_theme = uwp_get_option('recaptcha_theme', '');
-        $captcha_title = uwp_get_option('recaptcha_title', '');
 
-
-        $language = uwp_recaptcha_language();
-
-
-        $captcha_title = apply_filters( 'uwp_captcha_title', $captcha_title );
-
-        $div_id = 'uwp_captcha_' . $form;
         ?>
         <div class="uwp-captcha uwp-captcha-<?php echo $form;?>" style="margin: 7px 0;clear: both;margin-bottom: 15px;">
             <?php if ( trim( $captcha_title ) != '' ) { ?>
@@ -180,6 +184,13 @@ function uwp_recaptcha_display( $form ) {
 
             <div id="<?php echo $div_id;?>" class="uwp-captcha-render"></div>
                 <script type="text/javascript">
+                    <?php
+                    if ( $captcha_version != 'invisible' ) {
+                    ?>
+                    var gdCaptchaSize = (jQuery( document ).width() < 1200) ? 'compact' : 'normal';
+                    <?php
+                    }
+                    ?>
                     try {
                         var <?php echo $div_id;?> = function() {
                             if ( ( typeof jQuery != 'undefined' && !jQuery('#<?php echo $div_id;?>').html() ) ) {
@@ -193,12 +204,106 @@ function uwp_recaptcha_display( $form ) {
                         <?php echo $div_id;?>();
                     }
                 </script>
-                <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=<?php echo $div_id;?>&hl=<?php echo $language;?>&render=explicit" async defer></script>
-                <?php
-            ?>
-        </div>
-        <?php
-    } else {
+
+        <script type="text/javascript">
+            <?php if ( $captcha_version != 'invisible' ): ?>
+            var gdCaptchaSize = (jQuery( document ).width() < 1200) ? 'compact' : 'normal';
+            <?php endif ?>
+            try {
+                var <?php echo $div_id;?> = function() {
+                    if (typeof grecaptcha == 'undefined') {
+                        var to;
+                        clearInterval(to);
+                        to = setInterval(function(){
+                            if ( typeof grecaptcha != 'undefined' ) {
+                                clearInterval(to);
+                                <?php if ( $captcha_version == 'invisible' ): ?>
+                                for (var i = 0; i < document.forms.length; ++i) {
+                                    var form = document.forms[i];
+                                    var holder = form.querySelector('.uwp-captcha-render');
+                                    if (null === holder) {
+                                        continue;
+                                    }
+                                    (function(frm) {
+                                        jQuery(holder).html('');
+                                        if ( !jQuery(holder).html() ) {
+                                            var holderId = grecaptcha.render(holder, {
+                                                'sitekey': '<?php echo $site_key;?>',
+                                                'size': 'invisible',
+                                                'badge': 'inline', // possible values: bottomright, bottomleft, inline
+                                                'callback': function (recaptchaToken) {
+                                                    HTMLFormElement.prototype.submit.call(frm);
+                                                }
+                                            });
+                                            frm.onsubmit = function (evt) {
+                                                evt.preventDefault();
+                                                grecaptcha.execute(holderId);
+                                            };
+                                        }
+                                    })(form);
+                                }
+                                <?php else: ?>
+                                if ( !jQuery('#<?php echo $div_id;?>').html() ) {
+                                    grecaptcha.render('<?php echo $div_id;?>', {'sitekey': '<?php echo $site_key;?>', 'theme': '<?php echo $captcha_theme;?>', 'callback': gdcaptcha_callback_<?php echo $div_id;?>, 'size': gdCaptchaSize});
+                                }
+                                <?php endif ?>
+                            }
+                        }, 50);
+                    } else {
+                        <?php if ( $captcha_version == 'invisible' ): ?>
+                        for (var i = 0; i < document.forms.length; ++i) {
+                            var form = document.forms[i];
+                            var holder = form.querySelector('.uwp-captcha-render');
+                            if (null === holder) {
+                                continue;
+                            }
+                            (function(frm) {
+                                if ( !jQuery(holder).html() ) {
+                                    var holderId = grecaptcha.render(holder, {
+                                        'sitekey': '<?php echo $site_key;?>',
+                                        'size': 'invisible',
+                                        'badge': 'inline', // possible values: bottomright, bottomleft, inline
+                                        'callback': function (recaptchaToken) {
+                                            HTMLFormElement.prototype.submit.call(frm);
+                                        }
+                                    });
+                                    frm.onsubmit = function (evt) {
+                                        evt.preventDefault();
+                                        grecaptcha.execute(holderId);
+                                    };
+                                }
+                            })(form);
+                        }
+                        <?php else: ?>
+                        if ( !jQuery('#<?php echo $div_id;?>').html() ) {
+                            grecaptcha.render('<?php echo $div_id;?>', {'sitekey': '<?php echo $site_key;?>', 'theme': '<?php echo $captcha_theme;?>', 'callback': gdcaptcha_callback_<?php echo $div_id;?>, 'size': gdCaptchaSize });
+                        }
+                        <?php endif ?>
+                    }
+                }
+                jQuery(function() {
+                    if (typeof grecaptcha == 'undefined') { // captcha API not loaded
+                        jQuery.getScript('https://www.google.com/recaptcha/api.js?onload=<?php echo $div_id;?>&hl=<?php echo $language;?>&render=explicit').done(function (script, textStatus) {
+                            <?php echo $div_id ?>();
+                        }).fail(function (jqxhr, settings, exception) {
+                            console.log(exception);
+                        });
+                    } else {
+                        <?php echo $div_id ?>();
+                    }
+                });
+            } catch(err) {
+                console.log(err);
+            }
+            <?php if ( $captcha_version != 'invisible' ): ?>
+            function gdcaptcha_callback_<?php echo $div_id;?>(res) {
+                if (typeof res != 'undefined' && res) {
+                    jQuery('#<?php echo $div_id;?> .g-recaptcha-response').val(res);
+                }
+            }
+            <?php endif ?>
+        </script>
+    <?php } else {
         ?>
         <div class="uwp-captcha uwp-captcha-<?php echo $form; ?>">
             <div class="uwp-captcha-err">

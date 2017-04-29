@@ -16,6 +16,12 @@ Tested up to: 4.6
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+define( 'UWP_RECAPTCHA_VERSION', '1.0.0' );
+
+define( 'UWP_RECAPTCHA_PATH', plugin_dir_path( __FILE__ ) );
+
+define( 'UWP_RECAPTCHA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
 class Users_WP_Recaptcha {
 
     private static $instance;
@@ -125,9 +131,34 @@ class Users_WP_Recaptcha {
 
 }
 
-function activate_uwp_recaptcha() {
-    require_once('includes/class-uwp-recaptcha-activator.php');
-    UWP_ReCaptcha_Activator::activate();
+function activate_uwp_recaptcha($network_wide) {
+    if (is_multisite()) {
+        if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+            require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+        }
+
+        // Network active.
+        if ( is_plugin_active_for_network( 'userswp/userswp.php' ) ) {
+            $network_wide = true;
+        }
+        if ($network_wide) {
+            $main_blog_id = (int) get_network()->site_id;
+            // Switch to the new blog.
+            switch_to_blog( $main_blog_id );
+
+            require_once('includes/class-uwp-recaptcha-activator.php');
+            UWP_ReCaptcha_Activator::activate();
+
+            // Restore original blog.
+            restore_current_blog();
+        } else {
+            require_once('includes/class-uwp-recaptcha-activator.php');
+            UWP_ReCaptcha_Activator::activate();
+        }
+    } else {
+        require_once('includes/class-uwp-recaptcha-activator.php');
+        UWP_ReCaptcha_Activator::activate();
+    }
 }
 register_activation_hook( __FILE__, 'activate_uwp_recaptcha' );
 
