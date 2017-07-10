@@ -3,7 +3,7 @@
 Plugin Name: UsersWP - ReCaptcha
 Plugin URI: https://wpgeodirectory.com
 Description: ReCaptcha add-on for UsersWP.
-Version: 1.0.0
+Version: 1.0.0-beta
 Author: GeoDirectory team
 Author URI: https://wpgeodirectory.com
 License: GPL-2.0+
@@ -16,7 +16,7 @@ Tested up to: 4.6
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'UWP_RECAPTCHA_VERSION', '1.0.0' );
+define( 'UWP_RECAPTCHA_VERSION', '1.0.0-beta' );
 
 define( 'UWP_RECAPTCHA_PATH', plugin_dir_path( __FILE__ ) );
 
@@ -29,7 +29,7 @@ class Users_WP_Recaptcha {
     /**
      * Plugin Version
      */
-    private $version = '1.0.0';
+    private $version = '1.0.0-beta';
 
     private $file;
 
