@@ -88,6 +88,7 @@ function uwp_recaptcha_validate($result, $type) {
             case 'account':
                 $site_key = uwp_get_option('recaptcha_api_key', '');
                 $secret_key = uwp_get_option('recaptcha_api_secret', '');
+                $captcha_version = uwp_get_option( 'recaptcha_version', 'default' );
 
                 if ( !( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) ) {
                     if (current_user_can('manage_options')) {
@@ -159,6 +160,7 @@ function uwp_recaptcha_display( $form ) {
 
     $site_key = uwp_get_option('recaptcha_api_key', '');
     $secret_key = uwp_get_option('recaptcha_api_secret', '');
+    $captcha_version = uwp_get_option( 'recaptcha_version', 'default' );
 
     if ( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) {
 
@@ -179,21 +181,91 @@ function uwp_recaptcha_display( $form ) {
             <?php } ?>
 
             <div id="<?php echo $div_id;?>" class="uwp-captcha-render"></div>
-            <script type="text/javascript">
-                try {
-                    var <?php echo $div_id;?> = function() {
-                        if ( ( typeof jQuery != 'undefined' && !jQuery('#<?php echo $div_id;?>').html() ) ) {
-                            grecaptcha.render('<?php echo $div_id;?>', { 'sitekey' : '<?php echo $site_key;?>', 'theme' : '<?php echo $captcha_theme;?>' });
+
+            <?php if ( $captcha_version != 'invisible' ) { ?>
+                <script type="text/javascript">
+                    try {
+                        var <?php echo $div_id;?> = function() {
+                            if ( ( typeof jQuery != 'undefined' && !jQuery('#<?php echo $div_id;?>').html() ) ) {
+                                grecaptcha.render('<?php echo $div_id;?>', { 'sitekey' : '<?php echo $site_key;?>', 'theme' : '<?php echo $captcha_theme;?>' });
+                            }
                         }
+                    } catch(err) {
+                        console.log(err);
                     }
-                } catch(err) {
-                    console.log(err);
-                }
-                if ( typeof grecaptcha != 'undefined' && grecaptcha ) {
-                    <?php echo $div_id;?>();
-                }
-            </script>
-            <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=<?php echo $div_id;?>&hl=<?php echo $language;?>&render=explicit" async defer></script>
+                    if ( typeof grecaptcha != 'undefined' && grecaptcha ) {
+                        <?php echo $div_id;?>();
+                    }
+                </script>
+                <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=<?php echo $div_id;?>&hl=<?php echo $language;?>&render=explicit" async defer></script>
+            <?php } else { ?>
+                <script type="text/javascript">
+                     try {
+                        var <?php echo $div_id;?> = function() {
+                            if (typeof grecaptcha == 'undefined') {
+                                var to;
+                                clearInterval(to);
+                                to = setInterval(function(){
+                                    if ( typeof grecaptcha != 'undefined' ) {
+                                        clearInterval(to);
+                                        for (var i = 0; i < document.forms.length; ++i) {
+                                            var form = document.forms[i];
+                                            var holder = form.querySelector('.uwp-captcha-render');
+                                            if (null === holder) {
+                                                continue;
+                                            }
+                                            (function(frm) {
+                                                jQuery(holder).html('');
+                                                if ( !jQuery(holder).html() ) {
+                                                    var holderId = grecaptcha.render(holder, {
+                                                        'sitekey': '<?php echo $site_key;?>',
+                                                        'size': 'invisible',
+                                                        'badge': 'inline', // possible values: bottomright, bottomleft, inline
+                                                        'callback': function (recaptchaToken) {
+                                                            HTMLFormElement.prototype.submit.call(frm);
+                                                        }
+                                                    });
+                                                    frm.onsubmit = function (evt) {
+                                                        evt.preventDefault();
+                                                        grecaptcha.execute(holderId);
+                                                    };
+                                                }
+                                            })(form);
+                                        }
+                                    }
+                                }, 50);
+                            } else {
+                                for (var i = 0; i < document.forms.length; ++i) {
+                                    var form = document.forms[i];
+                                    var holder = form.querySelector('.uwp-captcha-render');
+                                    if (null === holder) {
+                                        continue;
+                                    }
+                                    (function(frm) {
+                                        if ( !jQuery(holder).html() ) {
+                                            var holderId = grecaptcha.render(holder, {
+                                                'sitekey': '<?php echo $site_key;?>',
+                                                'size': 'invisible',
+                                                'badge': 'inline', // possible values: bottomright, bottomleft, inline
+                                                'callback': function (recaptchaToken) {
+                                                    HTMLFormElement.prototype.submit.call(frm);
+                                                }
+                                            });
+                                            frm.onsubmit = function (evt) {
+                                                evt.preventDefault();
+                                                grecaptcha.execute(holderId);
+                                            };
+                                        }
+                                    })(form);
+                                }
+                            }
+                        }
+                    } catch(err) {
+                        console.log(err);
+                    }
+                </script>
+                <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=<?php echo $div_id;?>&hl=<?php echo $language;?>&render=explicit" async defer></script>
+            <?php } ?>
             <?php
             ?>
         </div>
