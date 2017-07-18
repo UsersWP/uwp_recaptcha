@@ -220,7 +220,7 @@ function uwp_recaptcha_display( $form ) {
                                                     var holderId = grecaptcha.render(holder, {
                                                         'sitekey': '<?php echo $site_key;?>',
                                                         'size': 'invisible',
-                                                        'badge': 'inline', // possible values: bottomright, bottomleft, inline
+                                                        'badge': 'bottomright', // possible values: bottomright, bottomleft, inline
                                                         'callback': function (recaptchaToken) {
                                                             HTMLFormElement.prototype.submit.call(frm);
                                                         }
@@ -246,7 +246,7 @@ function uwp_recaptcha_display( $form ) {
                                             var holderId = grecaptcha.render(holder, {
                                                 'sitekey': '<?php echo $site_key;?>',
                                                 'size': 'invisible',
-                                                'badge': 'inline', // possible values: bottomright, bottomleft, inline
+                                                'badge': 'bottomright', // possible values: bottomright, bottomleft, inline
                                                 'callback': function (recaptchaToken) {
                                                     HTMLFormElement.prototype.submit.call(frm);
                                                 }
