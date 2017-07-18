@@ -26,6 +26,9 @@ class UWP_ReCaptcha_Activator {
      */
     public static function activate() {
         self::add_default_options();
+
+        // Set activation redirect flag
+        set_transient( '_uwp_recaptcha_activation_redirect', true, 30 );
     }
 
     public static function add_default_options() {

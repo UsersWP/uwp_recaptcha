@@ -1,22 +1,24 @@
 <?php
 /*
 Plugin Name: UsersWP - ReCaptcha
-Plugin URI: https://wpgeodirectory.com
+Plugin URI: https://userswp.io
 Description: ReCaptcha add-on for UsersWP.
-Version: 1.0.0-beta
-Author: GeoDirectory team
-Author URI: https://wpgeodirectory.com
+Version: 1.0.0
+Author: AyeCode Ltd
+Author URI: https://userswp.io
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 Text Domain: uwp-recaptcha
 Domain Path: /languages
 Requires at least: 3.1
-Tested up to: 4.6
+Tested up to: 4.7
+Update URL: https://userswp.io
+Update ID: 323
 */
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'UWP_RECAPTCHA_VERSION', '1.0.0-beta' );
+define( 'UWP_RECAPTCHA_VERSION', '1.0.0' );
 
 define( 'UWP_RECAPTCHA_PATH', plugin_dir_path( __FILE__ ) );
 
@@ -29,7 +31,7 @@ class Users_WP_Recaptcha {
     /**
      * Plugin Version
      */
-    private $version = '1.0.0-beta';
+    private $version = UWP_RECAPTCHA_VERSION;
 
     private $file;
 
@@ -80,6 +82,9 @@ class Users_WP_Recaptcha {
     private function setup_actions() {
 
         do_action( 'uwp_recaptcha_setup_actions' );
+        if(is_admin()){
+            add_action( 'admin_init', array( $this, 'activation_redirect' ) );
+        }
     }
 
     public function load_textdomain() {
@@ -128,6 +133,28 @@ class Users_WP_Recaptcha {
 
     }
 
+    /**
+     * Redirect to the registration settings page on activation.
+     *
+     * @since 1.0.0
+     */
+    public function activation_redirect() {
+        // Bail if no activation redirect
+        if ( !get_transient( '_uwp_recaptcha_activation_redirect' ) ) {
+            return;
+        }
+
+        // Delete the redirect transient
+        delete_transient( '_uwp_recaptcha_activation_redirect' );
+
+        // Bail if activating from network, or bulk
+        if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
+            return;
+        }
+
+        wp_safe_redirect( admin_url( 'admin.php?page=uwp_recaptcha' ) );
+        exit;
+    }
 
 }
 
