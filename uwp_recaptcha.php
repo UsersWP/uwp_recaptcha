@@ -101,7 +101,7 @@ class Users_WP_Recaptcha {
         if ( empty ( $errors ) ) {
 
             if ( !class_exists( 'ReCaptcha' ) ) {
-                require_once dirname( __FILE__ ) . '/includes/class-recaptcha.php';
+                require_once dirname( __FILE__ ) . '/includes/recaptcha.php';
             }
 
             if (class_exists( 'Users_WP' )) {
