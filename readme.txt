@@ -57,6 +57,9 @@ TBA
 
 == Changelog ==
 
+= 1.0.1 =
+* Renamed some files - CHANGED
+
 = 1.0.0 =
 * First release.
 
