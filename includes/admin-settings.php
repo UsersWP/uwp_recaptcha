@@ -17,8 +17,8 @@ function uwp_add_admin_recaptcha_sub_menu($settings_page) {
 
     add_submenu_page(
         "userswp",
-        "ReCaptcha",
-        "ReCaptcha",
+        __( 'ReCaptcha', 'uwp-recaptcha' ),
+        __( 'ReCaptcha', 'uwp-recaptcha' ),
         'manage_options',
         'uwp_recaptcha',
         $settings_page

@@ -96,21 +96,27 @@ class Users_WP_Recaptcha {
 
     private function includes() {
 
-        if ( !class_exists( 'ReCaptcha' ) ) {
-            require_once dirname( __FILE__ ) . '/includes/class-recaptcha.php';
+        $errors = uwp_restrict_check_plugin_requirements();
+
+        if ( empty ( $errors ) ) {
+
+            if ( !class_exists( 'ReCaptcha' ) ) {
+                require_once dirname( __FILE__ ) . '/includes/recaptcha.php';
+            }
+
+            if (class_exists( 'Users_WP' )) {
+                require_once dirname( __FILE__ ) . '/includes/functions.php';
+            }
+
+            do_action( 'uwp_recaptcha_include_files' );
+
+            if ( ! is_admin() )
+                return;
+
+            require_once dirname( __FILE__ ) . '/includes/admin-settings.php';
+            do_action( 'uwp_recaptcha_include_admin_files' );
+
         }
-
-        if (class_exists( 'Users_WP' )) {
-            require_once dirname( __FILE__ ) . '/includes/recaptcha-functions.php';
-        }
-
-        do_action( 'uwp_recaptcha_include_files' );
-
-        if ( ! is_admin() )
-            return;
-
-        require_once dirname( __FILE__ ) . '/includes/admin-settings.php';
-        do_action( 'uwp_recaptcha_include_admin_files' );
 
     }
 
@@ -154,17 +160,17 @@ function activate_uwp_recaptcha($network_wide) {
             // Switch to the new blog.
             switch_to_blog( $main_blog_id );
 
-            require_once('includes/class-uwp-recaptcha-activator.php');
+            require_once('includes/activator.php');
             UWP_ReCaptcha_Activator::activate();
 
             // Restore original blog.
             restore_current_blog();
         } else {
-            require_once('includes/class-uwp-recaptcha-activator.php');
+            require_once('includes/activator.php');
             UWP_ReCaptcha_Activator::activate();
         }
     } else {
-        require_once('includes/class-uwp-recaptcha-activator.php');
+        require_once('includes/activator.php');
         UWP_ReCaptcha_Activator::activate();
     }
 }
@@ -173,16 +179,47 @@ register_activation_hook( __FILE__, 'activate_uwp_recaptcha' );
 
 function init_uwp_recaptcha() {
 
-    if ( ! class_exists( 'Users_WP' ) ) {
-        if ( !class_exists( 'Users_WP_Extension_Activation' ) ) {
-            require_once dirname( __FILE__ ) . '/includes/class-ext-activation.php';
-        }
-        $activation = new Users_WP_Extension_Activation( plugin_dir_path( __FILE__ ), basename( __FILE__ ) );
-        $activation->run();
-        return Users_WP_Recaptcha::get_instance();
+    $errors = uwp_recaptcha_check_plugin_requirements();
 
-    } else {
-        return Users_WP_Recaptcha::get_instance();
+    if ( empty ( $errors ) ) {
+        Users_WP_Recaptcha::get_instance();
     }
 }
 add_action( 'plugins_loaded', 'init_uwp_recaptcha', apply_filters( 'uwp_recaptcha_action_priority', 10 ) );
+
+// -------------------------
+// Plugin requirement check
+// -------------------------
+function uwp_recaptcha_check_plugin_requirements()
+{
+    $errors = array ();
+
+    $name = get_file_data( __FILE__, array ( 'Plugin Name' ) );
+
+    if ( ! class_exists( 'Users_WP' ) ) {
+        $errors[] =  '<b>'.$name[0].'</b>'.__( ' addon requires <a href="https://wordpress.org/plugins/userswp/" target="_blank">UsersWP</a> plugin.', 'uwp-recaptcha' );
+    }
+
+
+    return $errors;
+
+}
+
+add_action( 'admin_notices', 'uwp_recaptcha_check_admin_notices', 0 );
+function uwp_recaptcha_check_admin_notices()
+{
+    $errors = uwp_recaptcha_check_plugin_requirements();
+
+    if ( empty ( $errors ) )
+        return;
+
+    // Suppress "Plugin activated" notice.
+    unset( $_GET['activate'] );
+
+    printf(
+        '<div class="error"><p>%1$s</p>
+        </div>',
+        join( '</p><p>', $errors )
+    );
+
+}
