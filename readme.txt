@@ -59,6 +59,7 @@ TBA
 
 = 1.0.1 =
 * Renamed some files - CHANGED
+* Class names renamed from Users_WP to UsersWP for better naming and consistency - CHANGED
 
 = 1.0.0 =
 * First release.

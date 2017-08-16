@@ -5,8 +5,8 @@
  * @link       http://wpgeodirectory.com
  * @since      1.0.0
  *
- * @package    Users_WP
- * @subpackage Users_WP/includes
+ * @package    uwp_recaptcha
+ * @subpackage uwp_recaptcha/includes
  */
 
 /**
@@ -15,8 +15,8 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    Users_WP
- * @subpackage Users_WP/includes
+ * @package    uwp_recaptcha
+ * @subpackage uwp_recaptcha/includes
  * @author     GeoDirectory Team <info@wpgeodirectory.com>
  */
 class UWP_ReCaptcha_Activator {

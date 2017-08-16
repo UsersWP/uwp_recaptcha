@@ -24,7 +24,7 @@ define( 'UWP_RECAPTCHA_PATH', plugin_dir_path( __FILE__ ) );
 
 define( 'UWP_RECAPTCHA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-class Users_WP_Recaptcha {
+class UsersWP_Recaptcha {
 
     private static $instance;
 
@@ -50,8 +50,8 @@ class Users_WP_Recaptcha {
 
 
     public static function get_instance() {
-        if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Users_WP_Recaptcha ) ) {
-            self::$instance = new Users_WP_Recaptcha;
+        if ( ! isset( self::$instance ) && ! ( self::$instance instanceof UsersWP_Recaptcha ) ) {
+            self::$instance = new UsersWP_Recaptcha;
             self::$instance->setup_globals();
             self::$instance->includes();
             self::$instance->setup_actions();
@@ -104,7 +104,7 @@ class Users_WP_Recaptcha {
                 require_once dirname( __FILE__ ) . '/includes/recaptcha.php';
             }
 
-            if (class_exists( 'Users_WP' )) {
+            if (class_exists( 'UsersWP' )) {
                 require_once dirname( __FILE__ ) . '/includes/functions.php';
             }
 
@@ -113,7 +113,7 @@ class Users_WP_Recaptcha {
             if ( ! is_admin() )
                 return;
 
-            require_once dirname( __FILE__ ) . '/includes/admin-settings.php';
+            require_once dirname( __FILE__ ) . '/admin/settings.php';
             do_action( 'uwp_recaptcha_include_admin_files' );
 
         }
@@ -182,7 +182,7 @@ function init_uwp_recaptcha() {
     $errors = uwp_recaptcha_check_plugin_requirements();
 
     if ( empty ( $errors ) ) {
-        Users_WP_Recaptcha::get_instance();
+        UsersWP_Recaptcha::get_instance();
     }
 }
 add_action( 'plugins_loaded', 'init_uwp_recaptcha', apply_filters( 'uwp_recaptcha_action_priority', 10 ) );
@@ -196,7 +196,7 @@ function uwp_recaptcha_check_plugin_requirements()
 
     $name = get_file_data( __FILE__, array ( 'Plugin Name' ) );
 
-    if ( ! class_exists( 'Users_WP' ) ) {
+    if ( ! class_exists( 'UsersWP' ) ) {
         $errors[] =  '<b>'.$name[0].'</b>'.__( ' addon requires <a href="https://wordpress.org/plugins/userswp/" target="_blank">UsersWP</a> plugin.', 'uwp-recaptcha' );
     }
 
