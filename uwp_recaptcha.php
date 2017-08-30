@@ -96,7 +96,7 @@ class UsersWP_Recaptcha {
 
     private function includes() {
 
-        $errors = uwp_restrict_check_plugin_requirements();
+        $errors = uwp_recaptcha_check_plugin_requirements();
 
         if ( empty ( $errors ) ) {
 
