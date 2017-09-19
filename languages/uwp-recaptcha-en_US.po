@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: UsersWP - ReCaptcha 1.0.0\n"
+"Project-Id-Version: UsersWP - ReCaptcha 1.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-18 17:48+0100\n"
-"PO-Revision-Date: 2017-07-18 17:48+0100\n"
+"POT-Creation-Date: 2017-09-19 15:13+0100\n"
+"PO-Revision-Date: 2017-09-19 15:13+0100\n"
 "Last-Translator: \n"
 "Language-Team: AyeCode <info@userswp.io>\n"
 "Language: en_US\n"
@@ -18,130 +18,116 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: includes/admin-settings.php:5
+#: admin/settings.php:16
 msgid "ReCaptcha Settings"
 msgstr ""
 
-#: includes/admin-settings.php:32
+#: admin/settings.php:42 admin/settings.php:43 admin/settings.php:64
 msgid "ReCaptcha"
 msgstr ""
 
-#: includes/admin-settings.php:43
+#: admin/settings.php:85
 msgid "Google ReCaptcha API Key"
 msgstr ""
 
-#: includes/admin-settings.php:44
+#: admin/settings.php:86
 msgid ""
 "Enter Re-Captcha site key that you get after site registration at <a target="
 "\"_blank\" href=\"https://www.google.com/recaptcha/admin#list\">here</a>."
 msgstr ""
 
-#: includes/admin-settings.php:47
+#: admin/settings.php:89
 msgid "Enter Google ReCaptcha API Key"
 msgstr ""
 
-#: includes/admin-settings.php:51
+#: admin/settings.php:93
 msgid "Google ReCaptcha API Secret"
 msgstr ""
 
-#: includes/admin-settings.php:52
+#: admin/settings.php:94
 msgid ""
 "Enter Re-Captcha secret key that you get after site registration at <a "
 "target=\"_blank\" href=\"https://www.google.com/recaptcha/admin#list\">here</"
 "a>"
 msgstr ""
 
-#: includes/admin-settings.php:55
+#: admin/settings.php:97
 msgid "Enter Google ReCaptcha API Secret"
 msgstr ""
 
-#: includes/admin-settings.php:59
+#: admin/settings.php:101
 msgid "ReCaptcha version"
 msgstr ""
 
-#: includes/admin-settings.php:60
+#: admin/settings.php:102
 msgid ""
 "Select the ReCaptcha version. <b style=\"color: red;\">Heads Up! V2 keys "
 "will not work with invisible recaptcha, you will have to create new ones.</b>"
 msgstr ""
 
-#: includes/admin-settings.php:64
+#: admin/settings.php:106
 msgid "Select Option"
 msgstr ""
 
-#: includes/admin-settings.php:69
+#: admin/settings.php:111
 msgid "Enable ReCaptcha in"
 msgstr ""
 
-#: includes/admin-settings.php:70
+#: admin/settings.php:112
 msgid "UsersWP Register Form."
 msgstr ""
 
-#: includes/admin-settings.php:78
+#: admin/settings.php:120
 msgid "UsersWP Login Form."
 msgstr ""
 
-#: includes/admin-settings.php:86
+#: admin/settings.php:128
 msgid "UsersWP Forgot Form."
 msgstr ""
 
-#: includes/admin-settings.php:94
+#: admin/settings.php:136
 msgid "UsersWP Account Form."
 msgstr ""
 
-#: includes/admin-settings.php:107
+#: admin/settings.php:149
 msgid "Disable Google reCAPTCHA for"
 msgstr ""
 
-#: includes/admin-settings.php:117
+#: admin/settings.php:159
 msgid "Captcha Title"
 msgstr ""
 
-#: includes/admin-settings.php:120
+#: admin/settings.php:162
 msgid "Captcha title to be displayed above captcha code, leave blank to hide."
 msgstr ""
 
-#: includes/admin-settings.php:124
+#: admin/settings.php:166
 msgid "Captcha Theme"
 msgstr ""
 
-#: includes/admin-settings.php:125
+#: admin/settings.php:167
 msgid ""
 "Select color theme of captcha widget. <a target=\"_blank\" href=\"https://"
 "developers.google.com/recaptcha/docs/display#render_param\">Learn more</a>"
 msgstr ""
 
-#: includes/admin-settings.php:128
+#: admin/settings.php:170
 msgid "Light"
 msgstr ""
 
-#: includes/admin-settings.php:129
+#: admin/settings.php:171
 msgid "Dark"
 msgstr ""
 
-#: includes/admin-settings.php:143
+#: admin/settings.php:185
 msgid "ReCaptcha V2"
 msgstr ""
 
-#: includes/admin-settings.php:144
+#: admin/settings.php:186
 msgid "Invisible ReCaptcha"
 msgstr ""
 
-#: includes/class-ext-activation.php:49
-msgid "This plugin"
-msgstr ""
-
-#: includes/class-ext-activation.php:83
-#, php-format
-msgid " requires %sUsersWP%s. Please activate it to continue."
-msgstr ""
-
-#: includes/class-ext-activation.php:85
-#, php-format
-msgid " requires %sUsersWP%s. Please install it to continue."
-msgstr ""
-
-#: includes/recaptcha-functions.php:96 includes/recaptcha-functions.php:280
+#: includes/functions.php:96 includes/functions.php:280
 #, php-format
 msgid ""
 "To use reCAPTCHA you must get an API key from  <a target=\"_blank\" href="
@@ -149,28 +135,34 @@ msgid ""
 "plugin settings page at <a target=\"_blank\" href=\"%s\">here</a>"
 msgstr ""
 
-#: includes/recaptcha-functions.php:98 includes/recaptcha-functions.php:282
+#: includes/functions.php:98 includes/functions.php:282
 msgid ""
 "<strong>Error</strong>: Something went wrong. Please contact site admin."
 msgstr ""
 
-#: includes/recaptcha-functions.php:118
+#: includes/functions.php:118
 msgid "<strong>Error</strong>: You have entered an incorrect CAPTCHA value."
 msgstr ""
 
-#: includes/recaptcha-functions.php:312
+#: includes/functions.php:312
 #, php-format
 msgid ""
 "UsersWP ReCaptcha addon: API Key and API Secret not set. %sclick here%s to "
 "set one."
 msgstr ""
 
-#: includes/recaptcha-functions.php:314
+#: includes/functions.php:314
 #, php-format
 msgid "UsersWP ReCaptcha addon: API Key not set. %sclick here%s to set one."
 msgstr ""
 
-#: includes/recaptcha-functions.php:316
+#: includes/functions.php:316
 #, php-format
 msgid "UsersWP ReCaptcha addon: API Secret not set. %sclick here%s to set one."
+msgstr ""
+
+#: uwp_recaptcha.php:200
+msgid ""
+" addon requires <a href=\"https://wordpress.org/plugins/userswp/\" target="
+"\"_blank\">UsersWP</a> plugin."
 msgstr ""

@@ -4,7 +4,7 @@ Donate link: http://userswp.io/
 Tags: recaptcha, frontend, login, register, account, users, restrict, userswp
 Requires at least: 3.1
 Tested up to: 4.7
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,8 @@ No questions so far, but don't hesitate to ask!
 TBA
 
 == Changelog ==
+= 1.0.1 =
+Textdomain not being loaded correctly - FIXED
 
 = 1.0.1 =
 * Renamed some files - CHANGED
