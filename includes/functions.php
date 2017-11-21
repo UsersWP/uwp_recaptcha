@@ -50,6 +50,34 @@ function uwp_recaptcha_check_role() {
     }
 }
 
+function uwp_recaptcha_check_enabled( $type = '' ) {
+    if ( ! empty( $type ) ) {
+        $forms = array( $type );
+    } else {
+        $forms = apply_filters( 'uwp_recaptcha_available_in_forms', array( 
+            'enable_recaptcha_in_wp_register_form',
+            'enable_recaptcha_in_wp_login_form',
+            'enable_recaptcha_in_wp_reset_pwd_form',
+            'enable_recaptcha_in_register_form',
+            'enable_recaptcha_in_login_form',
+            'enable_recaptcha_in_forgot_form',
+            'enable_recaptcha_in_account_form',
+        ) );
+    }
+
+    $enabled = false;
+
+    if ( !empty( $forms ) ) {
+        foreach ( $forms as $form ) {
+            if ( ! empty( $form ) && uwp_get_option( $form, false ) ) {
+                $enabled = true;
+                break;
+            }
+        }
+    }
+
+    return apply_filters( 'uwp_recaptcha_check_enabled', $enabled, $forms, $type );
+}
 
 add_filter('uwp_validate_result', 'uwp_recaptcha_validate', 10, 2);
 function uwp_recaptcha_validate($result, $type) {
@@ -167,10 +195,6 @@ function uwp_recaptcha_display( $form ) {
         $captcha_theme = uwp_get_option('recaptcha_theme', '');
         $captcha_title = uwp_get_option('recaptcha_title', '');
 
-
-        $language = uwp_recaptcha_language();
-
-
         $captcha_title = apply_filters( 'uwp_captcha_title', $captcha_title );
 
         $div_id = 'uwp_captcha_' . $form;
@@ -193,11 +217,7 @@ function uwp_recaptcha_display( $form ) {
                     } catch(err) {
                         console.log(err);
                     }
-                    if ( typeof grecaptcha != 'undefined' && grecaptcha ) {
-                        <?php echo $div_id;?>();
-                    }
                 </script>
-                <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=<?php echo $div_id;?>&hl=<?php echo $language;?>&render=explicit" async defer></script>
             <?php } else { ?>
                 <script type="text/javascript">
                      try {
@@ -264,7 +284,6 @@ function uwp_recaptcha_display( $form ) {
                         console.log(err);
                     }
                 </script>
-                <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=<?php echo $div_id;?>&hl=<?php echo $language;?>&render=explicit" async defer></script>
             <?php } ?>
             <?php
             ?>

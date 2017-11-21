@@ -56,6 +56,10 @@ No questions so far, but don't hesitate to ask!
 TBA
 
 == Changelog ==
+
+= 1.0.2 =
+Multiple recaptcha on same page breaks form - FIXED
+
 = 1.0.1 =
 Textdomain not being loaded correctly - FIXED
 
