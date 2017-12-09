@@ -106,6 +106,30 @@ function uwp_add_recaptcha_settings($uwp_settings) {
             'placeholder' => __( 'Select Option', 'userswp' ),
             'class' => 'uwp_label_block',
         ),
+        /*'enable_recaptcha_in_wp_register_form' => array(
+            'id'   => 'enable_recaptcha_in_wp_register_form',
+            'name' => __( 'Enable ReCaptcha in', 'uwp-recaptcha' ),
+            'desc' => __( 'WordPress Register Form', 'uwp-recaptcha' ),
+            'type' => 'checkbox',
+            'std'  => '1',
+            'class' => 'uwp_label_inline',
+        ),
+        'enable_recaptcha_in_wp_login_form' => array(
+            'id'   => 'enable_recaptcha_in_wp_login_form',
+            'name' => '',
+            'desc' => __( 'WordPress Login Form', 'uwp-recaptcha' ),
+            'type' => 'checkbox',
+            'std'  => '1',
+            'class' => 'uwp_label_inline',
+        ),
+        'enable_recaptcha_in_wp_reset_pwd_form' => array(
+            'id'   => 'enable_recaptcha_in_wp_reset_pwd_form',
+            'name' => '',
+            'desc' => __( 'WordPress Reset Password Form', 'uwp-recaptcha' ),
+            'type' => 'checkbox',
+            'std'  => '1',
+            'class' => 'uwp_label_inline',
+        ),*/
         'enable_recaptcha_in_register_form' => array(
             'id'   => 'enable_recaptcha_in_register_form',
             'name' => __( 'Enable ReCaptcha in', 'uwp-recaptcha' ),
