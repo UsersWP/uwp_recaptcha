@@ -164,6 +164,8 @@ function uwp_add_recaptcha_settings($uwp_settings) {
         ),
     );
 
+    $options = apply_filters('uwp_settings_recaptcha_enable_for', $options);
+
     $count = 0;
     $roles = get_editable_roles();
     foreach ( $roles as $role => $data ) {
