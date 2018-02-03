@@ -1,0 +1,18 @@
+Checks for UsersWP plugin is active before activation.
+
+Display admin notice if the API credentials are not set in settings.
+
+Check captcha displays in following forms if enabled:
+    1) UsersWP Register Form
+    2) UsersWP Login Form
+    3) UsersWP Forgot Form
+    4) UsersWP Account Form
+    5) UsersWP Frontend Post Form (if UWP Frontend Post add-on enabled)
+
+Check disable captcha for user roles if enabled in settings.
+
+Check captcha version is working.
+
+Check captcha theme changes based on selection in settings.
+
+Check validation working in frontend for captcha in all forms.

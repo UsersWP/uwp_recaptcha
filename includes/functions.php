@@ -132,6 +132,26 @@ function uwp_recaptcha_validate($result, $type) {
             case 'forgot':
             case 'account':
             case 'frontend':
+                $site_key = uwp_get_option('recaptcha_api_key', '');
+                $secret_key = uwp_get_option('recaptcha_api_secret', '');
+                $captcha_version = uwp_get_option( 'recaptcha_version', 'default' );
+
+                if ( !( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) ) {
+                    if (current_user_can('manage_options')) {
+                        $plugin_settings_link = admin_url( '/admin.php?page=uwp_recaptcha' );
+                        $err_msg = sprintf( __( 'To use reCAPTCHA you must get an API key from  <a target="_blank" href="https://www.google.com/recaptcha/admin">here</a> and enter keys in the plugin settings page at <a target="_blank" href="%s">here</a>' ), $plugin_settings_link );
+                    } else {
+                        $err_msg = __('<strong>Error</strong>: Something went wrong. Please contact site admin.', 'uwp-recaptcha');
+                    }
+
+                    if (is_wp_error($result)) {
+                        $result->add('invalid_captcha', $err_msg);
+                    } else {
+                        $errors->add('invalid_captcha', $err_msg);
+                        $result = $errors;
+                    }
+                    break;
+                }
 
                 $reCaptcha = new ReCaptcha( $secret_key );
 
