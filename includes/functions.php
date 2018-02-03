@@ -104,6 +104,11 @@ function uwp_recaptcha_validate($result, $type) {
         if ( $enable_account_form != '1' ) {
             return $result;
         }
+    } elseif ($type == 'frontend') {
+        $enable_account_form = uwp_get_option('enable_recaptcha_in_frontend_form', false);
+        if ( $enable_account_form != '1' ) {
+            return $result;
+        }
     } else {
         return $result;
     }
@@ -114,6 +119,7 @@ function uwp_recaptcha_validate($result, $type) {
             case 'login':
             case 'forgot':
             case 'account':
+            case 'frontend':
                 $site_key = uwp_get_option('recaptcha_api_key', '');
                 $secret_key = uwp_get_option('recaptcha_api_secret', '');
                 $captcha_version = uwp_get_option( 'recaptcha_version', 'default' );
