@@ -57,6 +57,9 @@ TBA
 
 == Changelog ==
 
+= 1.0.3 =
+* Uninstall functionality - ADDED
+
 = 1.0.2 =
 Multiple recaptcha on same page breaks form - FIXED
 

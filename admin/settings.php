@@ -216,3 +216,17 @@ function uwp_recpatcha_version_options() {
 
     return $recaptcha_version_options;
 }
+
+add_filter( 'uwp_settings_general_uninstall', 'uwp_recaptcha_settings_uninstall', 10, 1 );
+function uwp_recaptcha_settings_uninstall($uninstall){
+    $uninstall['uninstall_recaptcha_data'] = array(
+        'id'   => 'uninstall_recaptcha_data',
+        'name' => __( 'UsersWP - Recaptcha', 'uwp-recaptcha' ),
+        'desc' => __( 'Remove all data when deleted?', 'uwp-recaptcha' ),
+        'type' => 'checkbox',
+        'std'  => '1',
+        'class' => 'uwp_label_inline',
+    );
+
+    return $uninstall;
+}
