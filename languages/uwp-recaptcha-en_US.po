@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: UsersWP - ReCaptcha 1.0.2\n"
+"Project-Id-Version: UsersWP - ReCaptcha 1.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-08 13:27+0000\n"
-"PO-Revision-Date: 2018-02-08 13:27+0000\n"
+"POT-Creation-Date: 2018-04-17 11:05+0100\n"
+"PO-Revision-Date: 2018-04-17 11:05+0100\n"
 "Last-Translator: \n"
 "Language-Team: AyeCode <info@userswp.io>\n"
 "Language: en_US\n"
@@ -125,6 +125,14 @@ msgstr ""
 
 #: admin/settings.php:212
 msgid "Invisible ReCaptcha"
+msgstr ""
+
+#: admin/settings.php:224
+msgid "UsersWP - Recaptcha"
+msgstr ""
+
+#: admin/settings.php:225
+msgid "Remove all data when deleted?"
 msgstr ""
 
 #: includes/functions.php:142
