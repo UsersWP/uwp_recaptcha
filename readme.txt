@@ -57,6 +57,9 @@ TBA
 
 == Changelog ==
 
+= 1.0.4 =
+* Integrate new settings interface - CHANGED
+
 = 1.0.3 =
 * Uninstall functionality - ADDED
 
