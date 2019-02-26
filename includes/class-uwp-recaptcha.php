@@ -52,7 +52,7 @@ if(!class_exists('UsersWP_Recaptcha')) {
          */
         public function load_textdomain()
         {
-            load_plugin_textdomain('uwp-recaptcha', false, basename(dirname(__FILE__)) . '/languages');
+            load_plugin_textdomain('uwp-recaptcha', false, basename(UWP_RECAPTCHA_PATH) . '/languages');
         }
 
         private function includes()

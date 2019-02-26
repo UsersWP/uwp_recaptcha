@@ -331,11 +331,11 @@ function uwp_recaptcha_key_notices() {
     $secret_key = uwp_get_option('recaptcha_api_secret', false);
 
     if (empty($site_key) && empty($secret_key)) {
-        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key and API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key and API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
     } elseif (empty($site_key)) {
-        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
     } elseif (empty($secret_key)) {
-        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
     }
 
 }
