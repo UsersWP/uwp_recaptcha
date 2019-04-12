@@ -212,8 +212,14 @@ function uwp_recaptcha_display( $form ) {
 
         $captcha_theme = uwp_get_option('recaptcha_theme', '');
         $captcha_title = uwp_get_option('recaptcha_title', '');
-
         $captcha_title = apply_filters( 'uwp_captcha_title', $captcha_title );
+        $captcha_size = 'normal';
+
+        if(wp_is_mobile()){
+            $captcha_size = 'compact';
+        }
+
+        $captcha_size = apply_filters( 'uwp_captcha_size', $captcha_size );
 
         $div_id = 'uwp_captcha_' . $form;
         ?>
@@ -229,7 +235,7 @@ function uwp_recaptcha_display( $form ) {
                     try {
                         var <?php echo $div_id;?> = function() {
                             if ( ( typeof jQuery != 'undefined' && !jQuery('#<?php echo $div_id;?>').html() ) ) {
-                                grecaptcha.render('<?php echo $div_id;?>', { 'sitekey' : '<?php echo $site_key;?>', 'theme' : '<?php echo $captcha_theme;?>' });
+                                grecaptcha.render('<?php echo $div_id;?>', { 'sitekey' : '<?php echo $site_key;?>', 'theme' : '<?php echo $captcha_theme;?>', 'size' : '<?php echo $captcha_size;?>' });
                             }
                         }
                     } catch(err) {

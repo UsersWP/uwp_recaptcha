@@ -59,6 +59,7 @@ TBA
 
 = 1.0.4 =
 * Integrate new settings interface - CHANGED
+* Recaptcha size compact for mobile compatibility - ADDED
 
 = 1.0.3 =
 * Uninstall functionality - ADDED
