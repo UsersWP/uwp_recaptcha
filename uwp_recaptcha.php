@@ -12,7 +12,7 @@ Text Domain: uwp-recaptcha
 Domain Path: /languages
 Requires at least: 3.1
 Tested up to: 4.9
-Update URL: https://userswp.io
+Update URL: https://github.com/UsersWP/uwp_recaptcha/
 Update ID: 323
 */
 // Exit if accessed directly
