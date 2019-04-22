@@ -115,8 +115,8 @@ function uwp_recaptcha_addons_get_settings( $settings, $current_section ) {
 
             $settings['disable_recaptcha_role_for'] = array(
                 'id' => 'disable_recaptcha_role_for',
-                'name' => __( 'Disable Google reCAPTCHA for', 'uwp-recaptcha' ),
-                'desc' => __( 'Select the roles to disable ReCaptcha.', 'uwp-recaptcha' ),
+                'name' => __( 'Disable reCAPTCHA for', 'uwp-recaptcha' ),
+                'desc' => __( 'Select the roles to disable ReCaptcha for.', 'uwp-recaptcha' ),
                 'type' => 'multiselect',
                 'options' => $role_options,
                 'chosen' => true,

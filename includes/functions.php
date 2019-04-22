@@ -58,35 +58,6 @@ function uwp_recaptcha_check_role() {
     }
 }
 
-function uwp_recaptcha_check_enabled( $type = '' ) {
-    if ( ! empty( $type ) ) {
-        $forms = array( $type );
-    } else {
-        $forms = apply_filters( 'uwp_recaptcha_available_in_forms', array( 
-            'enable_recaptcha_in_wp_register_form',
-            'enable_recaptcha_in_wp_login_form',
-            'enable_recaptcha_in_wp_reset_pwd_form',
-            'enable_recaptcha_in_register_form',
-            'enable_recaptcha_in_login_form',
-            'enable_recaptcha_in_forgot_form',
-            'enable_recaptcha_in_account_form',
-        ) );
-    }
-
-    $enabled = false;
-
-    if ( !empty( $forms ) ) {
-        foreach ( $forms as $form ) {
-            if ( ! empty( $form ) && uwp_get_option( $form, false ) ) {
-                $enabled = true;
-                break;
-            }
-        }
-    }
-
-    return apply_filters( 'uwp_recaptcha_check_enabled', $enabled, $forms, $type );
-}
-
 add_filter('uwp_validate_result', 'uwp_recaptcha_validate', 10, 2);
 function uwp_recaptcha_validate($result, $type) {
 
