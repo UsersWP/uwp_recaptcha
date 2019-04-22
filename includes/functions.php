@@ -84,8 +84,8 @@ function uwp_recaptcha_validate($result, $type) {
             return $result;
         }
     } elseif ($type == 'frontend') {
-        $enable_account_form = uwp_get_option('enable_recaptcha_in_frontend_form', false);
-        if ( $enable_account_form != '1' ) {
+        $enable_frontend_post_form = uwp_get_option('enable_recaptcha_in_frontend_form', false);
+        if ( $enable_frontend_post_form != '1' ) {
             return $result;
         }
     } else {
