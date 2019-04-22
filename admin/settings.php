@@ -83,6 +83,22 @@ function uwp_recaptcha_addons_get_settings( $settings, $current_section ) {
                 'default'  => '1',
                 'class' => 'uwp_label_inline',
             ),
+            array(
+                'id'   => 'enable_recaptcha_in_wp_login_form',
+                'name' => '',
+                'desc' => __( 'WP Login Form.', 'uwp-recaptcha' ),
+                'type' => 'checkbox',
+                'default'  => '1',
+                'class' => 'uwp_label_inline',
+            ),
+            array(
+                'id'   => 'enable_recaptcha_in_wp_register_form',
+                'name' => '',
+                'desc' => __( 'WP Register Form.', 'uwp-recaptcha' ),
+                'type' => 'checkbox',
+                'default'  => '1',
+                'class' => 'uwp_label_inline',
+            ),
 
         ));
 
@@ -90,14 +106,23 @@ function uwp_recaptcha_addons_get_settings( $settings, $current_section ) {
 
         $roles = get_editable_roles();
 
-        foreach ( $roles as $role => $data ) {
-            $count++;
-            $settings['disable_recaptcha_role_' . $role] = array(
-                'id' => 'disable_recaptcha_role_' . $role,
-                'name' => ( $count == 1 ? __( 'Disable Google reCAPTCHA for', 'uwp-recaptcha' ) : '' ),
-                'desc' => __( $data['name'], 'uwp-recaptcha' ),
-                'default' => '0',
-                'type' => 'checkbox',
+        if(count($roles) > 0){
+            $role_options = array();
+            foreach ( $roles as $role => $data ) {
+                $count++;
+                $role_options[$role] = $data['name'];
+            }
+
+            $settings['disable_recaptcha_role_for'] = array(
+                'id' => 'disable_recaptcha_role_for',
+                'name' => __( 'Disable Google reCAPTCHA for', 'uwp-recaptcha' ),
+                'desc' => __( 'Select the roles to disable ReCaptcha.', 'uwp-recaptcha' ),
+                'type' => 'multiselect',
+                'options' => $role_options,
+                'chosen' => true,
+                'placeholder' => __( 'Select Roles', 'uwp-recaptcha' ),
+                'class' => 'uwp_label_block',
+                'desc_tip' => true,
             );
         }
 

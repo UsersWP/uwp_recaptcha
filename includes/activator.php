@@ -42,6 +42,8 @@ class UWP_ReCaptcha_Activator {
         $settings['enable_recaptcha_in_login_form'] = "1";
         $settings['enable_recaptcha_in_forgot_form'] = "1";
         $settings['enable_recaptcha_in_account_form'] = "1";
+        $settings['enable_recaptcha_in_wp_login_form'] = "1";
+        $settings['enable_recaptcha_in_wp_register_form'] = "1";
 
 
         $settings['recaptcha_title'] = "";

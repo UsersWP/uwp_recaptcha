@@ -2,14 +2,12 @@
 add_action( 'init', 'uwp_recaptcha_init', 0 );
 function uwp_recaptcha_init() {
 
-    if ( uwp_recaptcha_check_role() ) { // disable captcha as per user role settings
-        return;
-    }
-
     $enable_register_form = uwp_get_option('enable_recaptcha_in_register_form', false);
     $enable_login_form = uwp_get_option('enable_recaptcha_in_login_form', false);
     $enable_forgot_form = uwp_get_option('enable_recaptcha_in_forgot_form', false);
     $enable_account_form = uwp_get_option('enable_recaptcha_in_account_form', false);
+    $enable_wp_login_form = uwp_get_option('enable_recaptcha_in_wp_login_form', false);
+    $enable_wp_regiter_form = uwp_get_option('enable_recaptcha_in_wp_register_form', false);
 
     // registration form
     if ( $enable_register_form == '1' ) {
@@ -31,6 +29,16 @@ function uwp_recaptcha_init() {
         add_action( 'uwp_template_fields', 'uwp_recaptcha_form_account' );
     }
 
+    // WP login form
+    if ( $enable_wp_login_form == '1' ) {
+        add_action( 'login_form', 'uwp_recaptcha_wp_login_form' );
+    }
+
+    // WP register form
+    if ( $enable_wp_regiter_form == '1' ) {
+        add_action( 'register_form', 'uwp_recaptcha_wp_register_form' );
+    }
+
     do_action( 'uwp_recaptcha_init' );
 }
 
@@ -42,7 +50,7 @@ function uwp_recaptcha_check_role() {
     global $current_user;
     $role = !empty( $current_user ) && isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 
-    if ( $role != '' && (int)uwp_get_option('uwp_recaptcha_role_' . $role, 0) == 1 ) { // disable captcha
+    if ( $role != '' && ((int)uwp_get_option('disable_recaptcha_role_' . $role, 0) == 1 || in_array($role, uwp_get_option('disable_recaptcha_role_for', false)) )) { // disable captcha
         return true;
     }
     else { // enable captcha
@@ -202,11 +210,27 @@ function uwp_recaptcha_form_account($type) {
     }
 }
 
+function uwp_recaptcha_wp_login_form($type) {
+    uwp_recaptcha_display( 'wp_login' );
+}
+
+function uwp_recaptcha_wp_register_form() {
+    uwp_recaptcha_display( 'wp_register' );
+}
+
 function uwp_recaptcha_display( $form ) {
+
+    if ( uwp_recaptcha_check_role() ) { // disable captcha as per user role settings
+        return;
+    }
 
     $site_key = uwp_get_option('recaptcha_api_key', '');
     $secret_key = uwp_get_option('recaptcha_api_secret', '');
     $captcha_version = uwp_get_option( 'recaptcha_version', 'default' );
+
+    if(!$form){
+        $form = 'general';
+    }
 
     if ( strlen( $site_key ) > 10 && strlen( $secret_key ) > 10 ) {
 
@@ -222,6 +246,31 @@ function uwp_recaptcha_display( $form ) {
         $captcha_size = apply_filters( 'uwp_captcha_size', $captcha_size );
 
         $div_id = 'uwp_captcha_' . $form;
+        if(($form == 'wp_login' || $form == 'wp_register') && !wp_is_mobile()){
+            if ( 'default' == uwp_get_option('recaptcha_version', 'default') ) {
+                $from_width = 302;
+            } else {
+                $from_width = 320;
+            }
+            ?>
+            <style type="text/css" media="screen">
+                .login-action-login #loginform,
+                .login-action-lostpassword #lostpasswordform,
+                .login-action-register #registerform {
+                    width: <?php echo $from_width; ?>px !important;
+                }
+                #login_error,
+                .message {
+                    width: <?php echo $from_width + 20; ?>px !important;
+                }
+                .login-action-login #loginform .gglcptch,
+                .login-action-lostpassword #lostpasswordform .gglcptch,
+                .login-action-register #registerform .gglcptch {
+                    margin-bottom: 10px;
+                }
+            </style>
+            <?php
+        }
         ?>
         <div class="uwp-captcha uwp-captcha-<?php echo $form;?>" style="margin: 7px 0;clear: both;margin-bottom: 15px;">
             <?php if ( trim( $captcha_title ) != '' ) { ?>
