@@ -134,7 +134,7 @@ if(!class_exists('UsersWP_Recaptcha')) {
 
         public function login_authenticate($user){
 
-            if(1 != uwp_get_option('enable_recaptcha_in_wp_register_form')){
+            if(1 != uwp_get_option('enable_recaptcha_in_wp_register_form') || !uwp_recaptcha_enabled()){
                 return $user;
             }
 
@@ -164,7 +164,7 @@ if(!class_exists('UsersWP_Recaptcha')) {
 
         public function registration_errors($errors){
 
-            if(1 != uwp_get_option('enable_recaptcha_in_wp_login_form')){
+            if(1 != uwp_get_option('enable_recaptcha_in_wp_login_form') || !uwp_recaptcha_enabled()){
                 return $errors;
             }
 
