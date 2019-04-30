@@ -60,6 +60,8 @@ TBA
 = 1.0.4 =
 * Integrate new settings interface - CHANGED
 * Recaptcha size compact for mobile compatibility - ADDED
+* Allow recaptcha for default WordPress admin login and registration forms - ADDED
+* Load JS on UsersWP and admin login and registration forms only - CHANGED
 
 = 1.0.3 =
 * Uninstall functionality - ADDED

@@ -38,6 +38,9 @@ if(!class_exists('UsersWP_Recaptcha')) {
         private function setup_actions()
         {
             add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+            add_action('login_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
+            add_action('wp_authenticate_user', array($this, 'login_authenticate'));
+            add_action('registration_errors', array($this, 'registration_errors'));
             add_action('init', array($this, 'load_textdomain'));
 
             do_action('uwp_recaptcha_setup_actions');
@@ -100,10 +103,17 @@ if(!class_exists('UsersWP_Recaptcha')) {
             exit;
         }
 
+        public function admin_enqueue_scripts(){
+            if(1 == uwp_get_option('enable_recaptcha_in_wp_login_form') || 1 == uwp_get_option('enable_recaptcha_in_wp_register_form')){
+                $this->enqueue_scripts();
+                add_action('login_footer', array($this, 'add_scripts'));
+            }
+        }
+
         public function enqueue_scripts()
         {
             if (!wp_script_is('uwp_recaptcha_js_api', 'registered')) {
-                if (!uwp_recaptcha_check_role() && uwp_recaptcha_check_enabled()) {
+                if ($GLOBALS['pagenow'] === 'wp-login.php' || is_uwp_page() || is_uwp_page('frontend_post_page')) {
                     $language = uwp_recaptcha_language();
 
                     wp_register_script('uwp_recaptcha_js_api', 'https://www.google.com/recaptcha/api.js?onload=uwp_recaptcha_onload&hl=' . $language . '&render=explicit', array('jquery'), $this->version, true);
@@ -120,6 +130,60 @@ if(!class_exists('UsersWP_Recaptcha')) {
             $localize_vars = apply_filters('uwp_recaptcha_localize_vars', array());
 
             wp_localize_script('uwp_recaptcha_script', 'uwp_recaptcha', $localize_vars);
+        }
+
+        public function login_authenticate($user){
+
+            if(1 != uwp_get_option('enable_recaptcha_in_wp_register_form') || !uwp_recaptcha_enabled()){
+                return $user;
+            }
+
+            if ( is_wp_error( $user ) && isset( $user->errors["empty_username"] ) && isset( $user->errors["empty_password"] ) ){
+                return $user;
+            }
+
+            $secret_key = uwp_get_option('recaptcha_api_secret', '');
+
+            $reCaptcha = new ReCaptcha( $secret_key );
+
+            $recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
+            $response = $reCaptcha->verifyResponse( $_SERVER['REMOTE_ADDR'], $recaptcha_value );
+
+            $invalid_captcha = !empty( $response ) && isset( $response->success ) && $response->success ? false : true;
+
+            if ( $invalid_captcha ) {
+                remove_action('authenticate', 'wp_authenticate_username_password', 20);
+                $error = new WP_Error();
+                $err_msg = __('<strong>ERROR</strong>: reCAPTCHA verification failed. Try again.', 'uwp-recaptcha');
+                $error->add('invalid_captcha', $err_msg);
+                return $error;
+            }
+
+            return $user;
+        }
+
+        public function registration_errors($errors){
+
+            if(1 != uwp_get_option('enable_recaptcha_in_wp_login_form') || !uwp_recaptcha_enabled()){
+                return $errors;
+            }
+
+            $secret_key = uwp_get_option('recaptcha_api_secret', '');
+
+            $reCaptcha = new ReCaptcha( $secret_key );
+
+            $recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
+            $response = $reCaptcha->verifyResponse( $_SERVER['REMOTE_ADDR'], $recaptcha_value );
+
+            $invalid_captcha = !empty( $response ) && isset( $response->success ) && $response->success ? false : true;
+
+            if ( $invalid_captcha ) {
+                $err_msg = __('<strong>ERROR</strong>: reCAPTCHA verification failed. Try again.', 'uwp-recaptcha');
+                $errors->add('invalid_captcha', $err_msg);
+                return $errors;
+            }
+
+            return $errors;
         }
     }
 }
