@@ -2,9 +2,9 @@
 Contributors: stiofansisland, paoltaia, ayecode
 Donate link: http://userswp.io/
 Tags: recaptcha, frontend, login, register, account, users, restrict, userswp
-Requires at least: 3.1
-Tested up to: 4.9
-Stable tag: 1.0.3
+Requires at least: 4.9
+Tested up to: 5.2
+Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,11 +29,6 @@ join [forum](https://groups.google.com/forum/#!forum/recaptcha).
 == Installation ==
 
 = Minimum Requirements =
-
-* WordPress 3.1 or greater
-* BuddyPress plugin
-* PHP version 5.2.4 or greater
-* MySQL version 5.0 or greater
 
 = Automatic installation =
 

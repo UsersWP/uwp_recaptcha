@@ -3,22 +3,20 @@
 Plugin Name: UsersWP - ReCaptcha
 Plugin URI: https://userswp.io
 Description: ReCaptcha add-on for UsersWP.
-Version: 1.0.3
+Version: 1.0.4
 Author: AyeCode Ltd
 Author URI: https://userswp.io
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 Text Domain: uwp-recaptcha
 Domain Path: /languages
-Requires at least: 3.1
-Tested up to: 4.9
 Update URL: https://github.com/UsersWP/uwp_recaptcha/
 Update ID: 323
 */
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'UWP_RECAPTCHA_VERSION', '1.0.3' );
+define( 'UWP_RECAPTCHA_VERSION', '1.0.4' );
 
 define( 'UWP_RECAPTCHA_PATH', plugin_dir_path( __FILE__ ) );
 
