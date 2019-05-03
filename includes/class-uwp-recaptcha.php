@@ -138,7 +138,7 @@ if(!class_exists('UsersWP_Recaptcha')) {
                 return $user;
             }
 
-            if(1 != uwp_get_option('enable_recaptcha_in_wp_register_form') || !uwp_recaptcha_enabled()){
+            if(1 != uwp_get_option('enable_recaptcha_in_wp_login_form') || !uwp_recaptcha_enabled()){
                 return $user;
             }
 
@@ -168,7 +168,7 @@ if(!class_exists('UsersWP_Recaptcha')) {
 
         public function registration_errors($errors){
 
-            if(1 != uwp_get_option('enable_recaptcha_in_wp_login_form') || !uwp_recaptcha_enabled()){
+            if(1 != uwp_get_option('enable_recaptcha_in_wp_register_form') || !uwp_recaptcha_enabled()){
                 return $errors;
             }
 
