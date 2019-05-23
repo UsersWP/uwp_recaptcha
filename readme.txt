@@ -52,6 +52,9 @@ TBA
 
 == Changelog ==
 
+= 1.0.5 =
+* Recaptcha not working on login widget on pages other than UWP pages - FIXED
+
 = 1.0.4 =
 * Integrate new settings interface - CHANGED
 * Recaptcha size compact for mobile compatibility - ADDED
