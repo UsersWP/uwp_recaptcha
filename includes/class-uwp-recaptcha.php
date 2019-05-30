@@ -113,13 +113,11 @@ if(!class_exists('UsersWP_Recaptcha')) {
         public function enqueue_scripts()
         {
             if (!wp_script_is('uwp_recaptcha_js_api', 'registered')) {
-                if ($GLOBALS['pagenow'] === 'wp-login.php' || is_uwp_page() || is_uwp_page('frontend_post_page')) {
-                    $language = uwp_recaptcha_language();
+                $language = uwp_recaptcha_language();
 
-                    wp_register_script('uwp_recaptcha_js_api', 'https://www.google.com/recaptcha/api.js?onload=uwp_recaptcha_onload&hl=' . $language . '&render=explicit', array('jquery'), $this->version, true);
+                wp_register_script('uwp_recaptcha_js_api', 'https://www.google.com/recaptcha/api.js?onload=uwp_recaptcha_onload&hl=' . $language . '&render=explicit', array('jquery'), $this->version, true);
 
-                    add_action('wp_footer', array($this, 'add_scripts'));
-                }
+                add_action('wp_footer', array($this, 'add_scripts'));
             }
         }
 
