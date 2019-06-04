@@ -53,7 +53,9 @@ TBA
 == Changelog ==
 
 = 1.0.5 =
-* Recaptcha not working on login widget on pages other than UWP pages - FIXED
+* reCaptcha not working on login widget on pages other than UWP pages - FIXED
+* Removed reCaptcha library - CHANGED
+* reCaptcha V3 support - ADDED
 
 = 1.0.4 =
 * Integrate new settings interface - CHANGED

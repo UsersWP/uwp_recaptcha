@@ -1,52 +1,4 @@
 <?php
-//add_action( 'init', 'uwp_recaptcha_init', 0 );
-add_action( 'uwp_template_fields', 'uwp_template_fields', 10, 1 );
-function uwp_template_fields($type) {
-
-    $enable_register_form = uwp_get_option('enable_recaptcha_in_register_form', false);
-    $enable_login_form = uwp_get_option('enable_recaptcha_in_login_form', false);
-    $enable_forgot_form = uwp_get_option('enable_recaptcha_in_forgot_form', false);
-    $enable_account_form = uwp_get_option('enable_recaptcha_in_account_form', false);
-
-    // registration form
-    if ( $enable_register_form == '1' && $type == 'register') {
-        uwp_recaptcha_display( 'register' );
-    }
-
-    // login form
-    if ( $enable_login_form == '1' && $type == 'login' ) {
-        uwp_recaptcha_display( 'login' );
-    }
-
-    // forgot form
-    if ( $enable_forgot_form == '1' && $type == 'forgot') {
-        uwp_recaptcha_display( 'forgot' );
-    }
-
-    // account form
-    if ( $enable_account_form == '1' && $type == 'account') {
-        uwp_recaptcha_display( 'account' );
-    }
-}
-
-add_action( 'login_form', 'uwp_recaptcha_wp_login_form' );
-function uwp_recaptcha_wp_login_form() {
-    // WP login form
-    $enable_wp_login_form = uwp_get_option('enable_recaptcha_in_wp_login_form', false);
-    if ( $enable_wp_login_form == '1' ) {
-        uwp_recaptcha_display('wp_login');
-    }
-}
-
-add_action( 'register_form', 'uwp_recaptcha_wp_register_form' );
-function uwp_recaptcha_wp_register_form() {
-    // WP register form
-    $enable_wp_register_form = uwp_get_option('enable_recaptcha_in_wp_register_form', false);
-    if ( $enable_wp_register_form == '1' ) {
-        uwp_recaptcha_display('wp_register');
-    }
-}
-
 function uwp_recaptcha_check_role() {
     if ( !is_user_logged_in() ) { // visitors
         return false;
@@ -61,100 +13,6 @@ function uwp_recaptcha_check_role() {
     else { // enable captcha
         return false;
     }
-}
-
-add_filter('uwp_validate_result', 'uwp_recaptcha_validate', 10, 2);
-function uwp_recaptcha_validate($result, $type) {
-
-    $errors = new WP_Error();
-
-    if ($type == 'register') {
-        $enable_register_form = uwp_get_option('enable_recaptcha_in_register_form', false);
-        if ( $enable_register_form != '1' ) {
-            return $result;
-        }
-    } elseif ($type == 'login') {
-        $enable_login_form = uwp_get_option('enable_recaptcha_in_login_form', false);
-        if ( $enable_login_form != '1' ) {
-            return $result;
-        }
-    } elseif ($type == 'forgot') {
-        $enable_forgot_form = uwp_get_option('enable_recaptcha_in_forgot_form', false);
-        if ( $enable_forgot_form != '1' ) {
-            return $result;
-        }
-    } elseif ($type == 'account') {
-        $enable_account_form = uwp_get_option('enable_recaptcha_in_account_form', false);
-        if ( $enable_account_form != '1' ) {
-            return $result;
-        }
-    } elseif ($type == 'frontend') {
-        $enable_frontend_post_form = uwp_get_option('enable_recaptcha_in_frontend_form', false);
-        if ( $enable_frontend_post_form != '1' ) {
-            return $result;
-        }
-    } else {
-        return $result;
-    }
-
-    if (is_wp_error($result)) {
-        return $result;
-    }
-
-    $secret_key = uwp_get_option('recaptcha_api_secret', '');
-
-    if ( !uwp_recaptcha_enabled() ) {
-        return $result;
-    }
-
-    if ( $type ) {
-        switch( $type ) {
-            case 'register':
-            case 'login':
-            case 'forgot':
-            case 'account':
-            case 'frontend':
-
-                if ( !uwp_recaptcha_enabled() ) {
-                    if (current_user_can('manage_options')) {
-                        $plugin_settings_link = admin_url( 'admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha' );
-                        $err_msg = sprintf( __( 'To use reCAPTCHA you must get an API key from  <a target="_blank" href="https://www.google.com/recaptcha/admin">here</a> and enter keys in the plugin settings page at <a target="_blank" href="%s">here</a>' ), $plugin_settings_link );
-                    } else {
-                        $err_msg = __('<strong>Error</strong>: Something went wrong. Please contact site admin.', 'uwp-recaptcha');
-                    }
-
-                    if (is_wp_error($result)) {
-                        $result->add('invalid_captcha', $err_msg);
-                    } else {
-                        $errors->add('invalid_captcha', $err_msg);
-                        $result = $errors;
-                    }
-                    break;
-                }
-
-                $reCaptcha = new ReCaptcha( $secret_key );
-
-                $recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
-                $response = $reCaptcha->verifyResponse( $_SERVER['REMOTE_ADDR'], $recaptcha_value );
-
-                $invalid_captcha = !empty( $response ) && isset( $response->success ) && $response->success ? false : true;
-
-                if ( $invalid_captcha ) {
-                    $err_msg = __('<strong>Error</strong>: reCAPTCHA verification failed. Try again.', 'uwp-recaptcha');
-                    if (is_wp_error($result)) {
-                        $result->add('invalid_captcha', $err_msg);
-                    } else {
-                        $errors->add('invalid_captcha', $err_msg);
-                        $result = $errors;
-                    }
-                } else {
-                    //do nothing
-                }
-                break;
-        }
-    }
-
-    return $result;
 }
 
 function uwp_recaptcha_display( $form ) {
@@ -216,9 +74,8 @@ function uwp_recaptcha_display( $form ) {
                 <label class="uwp-captcha-title"><?php _e( $captcha_title ) ;?></label>
             <?php } ?>
 
-            <div id="<?php echo $div_id;?>" class="uwp-captcha-render"></div>
-
-            <?php if ( $captcha_version != 'invisible' ) { ?>
+            <?php if ( $captcha_version == 'default' ) { ?>
+                <div id="<?php echo $div_id;?>" class="uwp-captcha-render"></div>
                 <script type="text/javascript">
                     try {
                         var <?php echo $div_id;?> = function() {
@@ -230,7 +87,22 @@ function uwp_recaptcha_display( $form ) {
                         console.log(err);
                     }
                 </script>
+            <?php } else if ( $captcha_version == 'v3' ) {
+                    $api_url = sprintf( 'https://www.google.com/recaptcha/api.js?render=%s', $site_key );
+                    echo '<input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">';
+                    echo '<script src="' . $api_url . '"></script>
+                            <script>
+                            if (typeof grecaptcha != \'undefined\') {
+                              grecaptcha.ready(function() {
+                                  grecaptcha.execute(\''. $site_key .'\', {action: \'uwp_captcha\'}).then(function(token) {
+                                     document.getElementById(\'g-recaptcha-response\').value=token;
+                                  });
+                              });
+                              }
+                             </script>';
+                ?>
             <?php } else { ?>
+                <div id="<?php echo $div_id;?>" class="uwp-captcha-render"></div>
                 <script type="text/javascript">
                      try {
                         var <?php echo $div_id;?> = function() {
@@ -304,6 +176,55 @@ function uwp_recaptcha_display( $form ) {
     }
 }
 
+function uwp_recaptcha_check( $form ) {
+
+    $secret_key = uwp_get_option('recaptcha_api_secret', '');
+    $remote_addr = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP );
+    $response = uwp_recaptcha_get_response( $secret_key, $remote_addr );
+    $captcha_version = uwp_get_option( 'recaptcha_version', 'default' );
+    $captcha_score = uwp_get_option( 'recaptcha_score', 0.5 );
+    $result = '';
+    $err_msg = __('<strong>ERROR</strong>: reCAPTCHA verification failed. Please try again.', 'uwp-recaptcha');
+
+    $invalid_captcha = true;
+    if ( isset( $response['success'] ) && $response['success'] ) {
+        if('v3' ==  $captcha_version && $response['score'] <  $captcha_score && 'uwp_captcha' == $response['action']){
+            $invalid_captcha = true;
+        } else {
+            $invalid_captcha = false;
+        }
+    }
+
+    if ( $invalid_captcha ) {
+        remove_action('authenticate', 'wp_authenticate_username_password', 20);
+        if(isset($response['error-codes']) && !empty($response['error-codes'])){
+            switch ($response['error-codes']){
+                case 'missing-input-secret':
+                case 'invalid-input-secret':
+                    $err_msg = __('<strong>reCAPTCHA ERROR</strong>: The secret parameter is missing or invalid. Please try again.', 'uwp-recaptcha');
+                    break;
+                case 'missing-input-response':
+                case 'invalid-input-response':
+                    $err_msg = __('<strong>reCAPTCHA ERROR</strong>: The response parameter is missing or invalid. Please try again.', 'uwp-recaptcha');
+                    break;
+                case 'bad-request':
+                    $err_msg = __('<strong>reCAPTCHA ERROR</strong>: The request is invalid. Please try again.', 'uwp-recaptcha');
+                    break;
+                case 'timeout-or-duplicate':
+                    $err_msg = __('<strong>reCAPTCHA ERROR</strong>: The response is no longer valid: either is too old or has been used previously. Please try again.', 'uwp-recaptcha');
+                    break;
+            }
+        }
+        $error = new WP_Error();
+        $error->add('invalid_captcha', $err_msg);
+        $result = $error;
+    }
+
+    $result = apply_filters( 'uwp_recaptcha_check', $result, $form );
+
+    return $result;
+}
+
 function uwp_recaptcha_language( $default = 'en' ) {
     $current_lang = get_locale();
 
@@ -319,22 +240,6 @@ function uwp_recaptcha_language( $default = 'en' ) {
     return $language;
 }
 
-function uwp_recaptcha_key_notices() {
-
-    $site_key = uwp_get_option('recaptcha_api_key', false);
-    $secret_key = uwp_get_option('recaptcha_api_secret', false);
-
-    if (empty($site_key) && empty($secret_key)) {
-        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key and API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
-    } elseif (empty($site_key)) {
-        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
-    } elseif (empty($secret_key)) {
-        echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
-    }
-
-}
-add_action( 'admin_notices', 'uwp_recaptcha_key_notices' );
-
 function uwp_recaptcha_enabled(){
     $site_key = uwp_get_option('recaptcha_api_key', '');
     $secret_key = uwp_get_option('recaptcha_api_secret', '');
@@ -344,4 +249,17 @@ function uwp_recaptcha_enabled(){
     }
 
     return true;
+}
+
+function uwp_recaptcha_get_response( $privatekey, $remote_ip ) {
+    $args = array(
+        'body' => array(
+            'secret'   => $privatekey,
+            'response' => stripslashes( esc_html( $_POST["g-recaptcha-response"] ) ),
+            'remoteip' => $remote_ip,
+        ),
+        'sslverify' => false
+    );
+    $resp = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', $args );
+    return json_decode( wp_remote_retrieve_body( $resp ), true );
 }

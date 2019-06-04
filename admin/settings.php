@@ -23,9 +23,20 @@ function uwp_recaptcha_addons_get_settings( $settings, $current_section ) {
                 'desc_tip' => false,
             ),
             array(
+                'id' => 'recaptcha_version',
+                'name' => __( 'ReCaptcha version', 'uwp-recaptcha' ),
+                'desc' => __( 'Select the ReCaptcha version. <b style="color: red;">Heads Up! V2, V3 and invisible recaptcha has different keys. So use keys based on version you select here.</b>', 'uwp-recaptcha' ),
+                'type' => 'select',
+                'options' => uwp_recpatcha_version_options(),
+                'chosen' => true,
+                'placeholder' => __( 'Select Option', 'uwp-recaptcha' ),
+                'class' => 'uwp_label_block',
+                'desc_tip' => true,
+            ),
+            array(
                 'id' => 'recaptcha_api_key',
                 'name' => __( 'Google ReCaptcha API Key', 'uwp-recaptcha' ),
-                'desc' => __( 'Enter Re-Captcha site key that you get after site registration at <a target="_blank" href="https://www.google.com/recaptcha/admin#list">here</a>.', 'uwp-recaptcha' ),
+                'desc' => __( 'Enter Re-Captcha site key that you get after site registration at <a target="_blank" href="https://www.google.com/recaptcha/admin#list">here</a>. Recaptcha V2 and V3 has different API key.', 'uwp-recaptcha' ),
                 'type' => 'text',
                 'size' => 'regular',
                 'placeholder' => __( 'Enter Google ReCaptcha API Key', 'uwp-recaptcha' ),
@@ -34,22 +45,25 @@ function uwp_recaptcha_addons_get_settings( $settings, $current_section ) {
             array(
                 'id' => 'recaptcha_api_secret',
                 'name' => __( 'Google ReCaptcha API Secret', 'uwp-recaptcha' ),
-                'desc' => __( 'Enter Re-Captcha secret key that you get after site registration at <a target="_blank" href="https://www.google.com/recaptcha/admin#list">here</a>', 'uwp-recaptcha' ),
+                'desc' => __( 'Enter Re-Captcha secret key that you get after site registration at <a target="_blank" href="https://www.google.com/recaptcha/admin#list">here</a>. Recaptcha V2 and V3 has different API secret', 'uwp-recaptcha' ),
                 'type' => 'text',
                 'size' => 'regular',
                 'placeholder' => __( 'Enter Google ReCaptcha API Secret', 'uwp-recaptcha' ),
                 'desc_tip' => true,
             ),
             array(
-                'id' => 'recaptcha_version',
-                'name' => __( 'ReCaptcha version', 'uwp-recaptcha' ),
-                'desc' => __( 'Select the ReCaptcha version. <b style="color: red;">Heads Up! V2 keys will not work with invisible recaptcha, you will have to create new ones.</b>', 'uwp-recaptcha' ),
-                'type' => 'select',
-                'options' => uwp_recpatcha_version_options(),
-                'chosen' => true,
-                'placeholder' => __( 'Select Option', 'uwp-recaptcha' ),
-                'class' => 'uwp_label_block',
+                'id' => 'recaptcha_score',
+                'name' => __( 'Minimum verification score', 'uwp-recaptcha' ),
+                'desc' => __( 'Set the minimum verification score from 0 to 1 (for Recaptcha V3 only). See more <a target="_blank" href="https://developers.google.com/recaptcha/docs/v3#score">here</a>', 'uwp-recaptcha' ),
+                'type' => 'number',
+                'size' => 'regular',
+                'default' => 0.5,
                 'desc_tip' => true,
+                'custom_attributes' => array(
+                    'max' => 1,
+                    'min' => 0,
+                    'step' => 0.1,
+                ),
             ),
             array(
                 'id'   => 'enable_recaptcha_in_register_form',
@@ -172,6 +186,7 @@ function uwp_recaptcha_settings_uninstall( $settings ) {
 function uwp_recpatcha_version_options() {
 
     $recaptcha_version_options = array(
+        'v3' =>  __('ReCaptcha V3', 'uwp-recaptcha'),
         'default' =>  __('ReCaptcha V2', 'uwp-recaptcha'),
         'invisible' =>  __('Invisible ReCaptcha', 'uwp-recaptcha'),
     );

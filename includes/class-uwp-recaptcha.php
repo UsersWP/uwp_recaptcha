@@ -42,12 +42,17 @@ if(!class_exists('UsersWP_Recaptcha')) {
             add_action('wp_authenticate_user', array($this, 'login_authenticate'));
             add_action('registration_errors', array($this, 'registration_errors'));
             add_action('init', array($this, 'load_textdomain'));
-
-            do_action('uwp_recaptcha_setup_actions');
+            add_action('uwp_template_fields', array($this, 'add_captcha_for_uwp_forms'), 10, 1);
+            add_action('uwp_validate_result', array($this, 'validate_recaptcha'), 10, 3);
+            add_action('register_form', array($this, 'add_recaptcha_wp_register_form'), 10, 1);
+            add_action('login_form', array($this, 'add_recaptcha_wp_login_form'), 10, 1);
 
             if (is_admin()) {
                 add_action('admin_init', array($this, 'activation_redirect'));
+                add_action('admin_notices', array($this, 'recaptcha_key_notices'));
             }
+
+            do_action('uwp_recaptcha_setup_actions');
         }
 
         /**
@@ -60,10 +65,6 @@ if(!class_exists('UsersWP_Recaptcha')) {
 
         private function includes()
         {
-
-            if (!class_exists('ReCaptcha')) {
-                require_once UWP_RECAPTCHA_PATH . '/includes/recaptcha.php';
-            }
 
             if (class_exists('UsersWP')) {
                 require_once UWP_RECAPTCHA_PATH . '/includes/functions.php';
@@ -130,13 +131,101 @@ if(!class_exists('UsersWP_Recaptcha')) {
             wp_localize_script('uwp_recaptcha_script', 'uwp_recaptcha', $localize_vars);
         }
 
+        public function recaptcha_key_notices() {
+
+            $site_key = uwp_get_option('recaptcha_api_key');
+            $secret_key = uwp_get_option('recaptcha_api_secret');
+
+            if (empty($site_key) && empty($secret_key)) {
+                echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key and API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+            } elseif (empty($site_key)) {
+                echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Key not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+            } elseif (empty($secret_key)) {
+                echo '<div class="notice-error notice is-dismissible"><p><strong>' . sprintf(__('UsersWP ReCaptcha addon: API Secret not set. %sclick here%s to set one.', 'uwp-recaptcha'), '<a href=\'' . admin_url('admin.php?page=userswp&tab=uwp-addons&section=uwp_recaptcha') . '\'>', '</a>') . '</strong></p></div>';
+            }
+
+        }
+
+        public function add_captcha_for_uwp_forms($type){
+            $enable_register_form = uwp_get_option('enable_recaptcha_in_register_form');
+            $enable_login_form = uwp_get_option('enable_recaptcha_in_login_form');
+            $enable_forgot_form = uwp_get_option('enable_recaptcha_in_forgot_form');
+            $enable_account_form = uwp_get_option('enable_recaptcha_in_account_form');
+
+            // registration form
+            if ( $enable_register_form == '1' && $type == 'register') {
+                uwp_recaptcha_display( 'register' );
+            }
+
+            // login form
+            if ( $enable_login_form == '1' && $type == 'login' ) {
+                uwp_recaptcha_display( 'login' );
+            }
+
+            // forgot form
+            if ( $enable_forgot_form == '1' && $type == 'forgot') {
+                uwp_recaptcha_display( 'forgot' );
+            }
+
+            // account form
+            if ( $enable_account_form == '1' && $type == 'account') {
+                uwp_recaptcha_display( 'account' );
+            }
+        }
+
+        public function add_recaptcha_wp_login_form() {
+            // WP login form
+            $enable_wp_login_form = uwp_get_option('enable_recaptcha_in_wp_login_form', false);
+            if ( $enable_wp_login_form == '1' ) {
+                uwp_recaptcha_display('wp_login');
+            }
+        }
+
+        public function add_recaptcha_wp_register_form() {
+            // WP register form
+            $enable_wp_register_form = uwp_get_option('enable_recaptcha_in_wp_register_form', false);
+            if ( $enable_wp_register_form == '1' ) {
+                uwp_recaptcha_display('wp_register');
+            }
+        }
+
+        public function validate_recaptcha($result, $type, $data) {
+
+            if(empty($type) && ! isset( $data['uwp_'.$type.'_nonce'] )){
+                return $result;
+            }
+
+            if(!uwp_recaptcha_enabled() || 1 !=  uwp_get_option('enable_recaptcha_in_'.$type.'_form') || is_wp_error($result)){
+                return $result;
+            }
+
+            if ( $type ) {
+                switch( $type ) {
+                    case 'register':
+                    case 'login':
+                    case 'forgot':
+                    case 'account':
+                    case 'frontend':
+
+                        $response = uwp_recaptcha_check($type);
+                        if(is_wp_error($response)){
+                            return $response;
+                        }
+
+                        break;
+                }
+            }
+
+            return $result;
+        }
+
         public function login_authenticate($user){
 
-            if(isset( $_POST['uwp_login_nonce'] )){  // ignore UWP login form submission
+            if(isset( $_POST['uwp_login_nonce'] ) || isset( $_POST['uwp_register_nonce'] )){  // ignore UWP login/register form submission
                 return $user;
             }
 
-            if(1 != uwp_get_option('enable_recaptcha_in_wp_login_form') || !uwp_recaptcha_enabled()){
+            if(1 != uwp_get_option('enable_recaptcha_in_wp_login_form') || !uwp_recaptcha_enabled() || is_user_logged_in()){
                 return $user;
             }
 
@@ -144,21 +233,9 @@ if(!class_exists('UsersWP_Recaptcha')) {
                 return $user;
             }
 
-            $secret_key = uwp_get_option('recaptcha_api_secret', '');
-
-            $reCaptcha = new ReCaptcha( $secret_key );
-
-            $recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
-            $response = $reCaptcha->verifyResponse( $_SERVER['REMOTE_ADDR'], $recaptcha_value );
-
-            $invalid_captcha = !empty( $response ) && isset( $response->success ) && $response->success ? false : true;
-
-            if ( $invalid_captcha ) {
-                remove_action('authenticate', 'wp_authenticate_username_password', 20);
-                $error = new WP_Error();
-                $err_msg = __('<strong>ERROR</strong>: reCAPTCHA verification failed. Try again.', 'uwp-recaptcha');
-                $error->add('invalid_captcha', $err_msg);
-                return $error;
+            $response = uwp_recaptcha_check('wp_login_form');
+            if(is_wp_error($response)){
+                return $response;
             }
 
             return $user;
@@ -166,23 +243,17 @@ if(!class_exists('UsersWP_Recaptcha')) {
 
         public function registration_errors($errors){
 
+            if(isset( $_POST['uwp_login_nonce'] ) || isset( $_POST['uwp_register_nonce'] )){  // ignore UWP login/register form submission
+                return $errors;
+            }
+
             if(1 != uwp_get_option('enable_recaptcha_in_wp_register_form') || !uwp_recaptcha_enabled()){
                 return $errors;
             }
 
-            $secret_key = uwp_get_option('recaptcha_api_secret', '');
-
-            $reCaptcha = new ReCaptcha( $secret_key );
-
-            $recaptcha_value = isset( $_POST['g-recaptcha-response'] ) ? $_POST['g-recaptcha-response'] : '';
-            $response = $reCaptcha->verifyResponse( $_SERVER['REMOTE_ADDR'], $recaptcha_value );
-
-            $invalid_captcha = !empty( $response ) && isset( $response->success ) && $response->success ? false : true;
-
-            if ( $invalid_captcha ) {
-                $err_msg = __('<strong>ERROR</strong>: reCAPTCHA verification failed. Try again.', 'uwp-recaptcha');
-                $errors->add('invalid_captcha', $err_msg);
-                return $errors;
+            $response = uwp_recaptcha_check('wp_register_form');
+            if(is_wp_error($response)){
+                return $response;
             }
 
             return $errors;
