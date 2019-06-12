@@ -7,7 +7,7 @@ function uwp_recaptcha_check_role() {
     global $current_user;
     $role = !empty( $current_user ) && isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 
-    if ( $role != '' && ((int)uwp_get_option('disable_recaptcha_role_' . $role, 0) == 1 || in_array($role, uwp_get_option('disable_recaptcha_role_for', false)) )) { // disable captcha
+    if ( $role != '' && ((int)uwp_get_option('disable_recaptcha_role_' . $role, 0) == 1 || in_array($role, uwp_get_option('disable_recaptcha_role_for', array())) )) { // disable captcha
         return true;
     }
     else { // enable captcha
