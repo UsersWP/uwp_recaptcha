@@ -198,6 +198,10 @@ if(!class_exists('UsersWP_Recaptcha')) {
                 return $result;
             }
 
+            if ( uwp_recaptcha_check_role() ) { // disable captcha as per user role settings
+                return $result;
+            }
+
             if(!uwp_recaptcha_enabled() || 1 !=  uwp_get_option('enable_recaptcha_in_'.$type.'_form') || is_wp_error($result)){
                 return $result;
             }
