@@ -147,6 +147,9 @@ if(!class_exists('UsersWP_Recaptcha')) {
         }
 
         public function add_captcha_for_uwp_forms($type){
+            if(!uwp_recaptcha_enabled()){
+                return;
+            }
             $enable_register_form = uwp_get_option('enable_recaptcha_in_register_form');
             $enable_login_form = uwp_get_option('enable_recaptcha_in_login_form');
             $enable_forgot_form = uwp_get_option('enable_recaptcha_in_forgot_form');
@@ -192,6 +195,10 @@ if(!class_exists('UsersWP_Recaptcha')) {
         public function validate_recaptcha($result, $type, $data) {
 
             if(empty($type) && ! isset( $data['uwp_'.$type.'_nonce'] )){
+                return $result;
+            }
+
+            if ( uwp_recaptcha_check_role() ) { // disable captcha as per user role settings
                 return $result;
             }
 

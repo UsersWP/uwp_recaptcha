@@ -7,7 +7,7 @@ function uwp_recaptcha_check_role() {
     global $current_user;
     $role = !empty( $current_user ) && isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 
-    if ( $role != '' && ((int)uwp_get_option('disable_recaptcha_role_' . $role, 0) == 1 || in_array($role, uwp_get_option('disable_recaptcha_role_for', false)) )) { // disable captcha
+    if ( $role != '' && ((int)uwp_get_option('disable_recaptcha_role_' . $role, 0) == 1 || in_array($role, uwp_get_option('disable_recaptcha_role_for', array())) )) { // disable captcha
         return true;
     }
     else { // enable captcha
@@ -178,6 +178,10 @@ function uwp_recaptcha_display( $form ) {
 
 function uwp_recaptcha_check( $form ) {
 
+    if ( uwp_recaptcha_check_role() ) { // disable captcha as per user role settings
+        return '';
+    }
+
     $secret_key = uwp_get_option('recaptcha_api_secret', '');
     $remote_addr = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP );
     $response = uwp_recaptcha_get_response( $secret_key, $remote_addr );
@@ -252,6 +256,10 @@ function uwp_recaptcha_enabled(){
 }
 
 function uwp_recaptcha_get_response( $privatekey, $remote_ip ) {
+    if(empty($_POST["g-recaptcha-response"])){
+        return array('success' => false, 'error-codes' => 'missing-input-secret');
+    }
+
     $args = array(
         'body' => array(
             'secret'   => $privatekey,
