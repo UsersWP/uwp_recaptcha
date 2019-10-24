@@ -21,6 +21,7 @@ function uwp_recaptcha_display( $form ) {
         return;
     }
 
+    $is_bootstrap = uwp_get_option("design_style",'bootstrap') ?  true : false;
     $site_key = uwp_get_option('recaptcha_api_key', '');
     $secret_key = uwp_get_option('recaptcha_api_secret', '');
     $captcha_version = uwp_get_option( 'recaptcha_version', 'default' );
@@ -43,6 +44,7 @@ function uwp_recaptcha_display( $form ) {
         $captcha_size = apply_filters( 'uwp_captcha_size', $captcha_size );
 
         $div_id = 'uwp_captcha_' . $form;
+        $div_id = wp_doing_ajax() ? $div_id."_ajax" : $div_id;
         if(($form == 'wp_login' || $form == 'wp_register') && !wp_is_mobile()){
             if ( 'default' == uwp_get_option('recaptcha_version', 'default') ) {
                 $from_width = 302;
@@ -68,8 +70,10 @@ function uwp_recaptcha_display( $form ) {
             </style>
             <?php
         }
+
+        echo $is_bootstrap ? '<div class="form-group">' :'<div class="uwp-captcha uwp-captcha-'.$form.'" style="margin: 7px 0;clear: both;margin-bottom: 15px;">';
         ?>
-        <div class="uwp-captcha uwp-captcha-<?php echo $form;?>" style="margin: 7px 0;clear: both;margin-bottom: 15px;">
+
             <?php if ( trim( $captcha_title ) != '' ) { ?>
                 <label class="uwp-captcha-title"><?php _e( $captcha_title ) ;?></label>
             <?php } ?>
@@ -89,13 +93,13 @@ function uwp_recaptcha_display( $form ) {
                 </script>
             <?php } else if ( $captcha_version == 'v3' ) {
                     $api_url = sprintf( 'https://www.google.com/recaptcha/api.js?render=%s', $site_key );
-                    echo '<input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">';
+                    echo '<input type="hidden" id="'.$div_id.'" name="g-recaptcha-response">';
                     echo '<script src="' . $api_url . '"></script>
                             <script>
                             if (typeof grecaptcha != \'undefined\') {
                               grecaptcha.ready(function() {
                                   grecaptcha.execute(\''. $site_key .'\', {action: \'uwp_captcha\'}).then(function(token) {
-                                     document.getElementById(\'g-recaptcha-response\').value=token;
+                                     document.getElementById(\''.$div_id.'\').value=token;
                                   });
                               });
                               }
@@ -126,7 +130,11 @@ function uwp_recaptcha_display( $form ) {
                                                         'size': 'invisible',
                                                         'badge': 'bottomright', // possible values: bottomright, bottomleft, inline
                                                         'callback': function (recaptchaToken) {
+                                                            <?php
+                                                            // if a form is called via ajax then we do our own checks and callback.
+                                                            if(!wp_doing_ajax()){?>
                                                             HTMLFormElement.prototype.submit.call(frm);
+                                                            <?php }?>
                                                         }
                                                     });
                                                     frm.onsubmit = function (evt) {
@@ -152,7 +160,11 @@ function uwp_recaptcha_display( $form ) {
                                                 'size': 'invisible',
                                                 'badge': 'bottomright', // possible values: bottomright, bottomleft, inline
                                                 'callback': function (recaptchaToken) {
+                                                    <?php
+                                                    // if a form is called via ajax then we do our own checks and callback.
+                                                    if(!wp_doing_ajax()){?>
                                                     HTMLFormElement.prototype.submit.call(frm);
+                                                    <?php }?>
                                                 }
                                             });
                                             frm.onsubmit = function (evt) {
@@ -168,11 +180,22 @@ function uwp_recaptcha_display( $form ) {
                         console.log(err);
                     }
                 </script>
-            <?php } ?>
-            <?php
-            ?>
+            <?php }?>
         </div>
         <?php
+
+        // Self run if loaded via ajax
+        if(wp_doing_ajax()) {
+            ?>
+            <script>
+                jQuery(function () {
+                    uwp_init_recaptcha();
+                    aui_init_tooltips();
+                });
+            </script>
+            <?php
+        }
+
     }
 }
 

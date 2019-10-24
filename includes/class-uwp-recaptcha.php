@@ -116,19 +116,46 @@ if(!class_exists('UsersWP_Recaptcha')) {
             if (!wp_script_is('uwp_recaptcha_js_api', 'registered')) {
                 $language = uwp_recaptcha_language();
 
-                wp_register_script('uwp_recaptcha_js_api', 'https://www.google.com/recaptcha/api.js?onload=uwp_recaptcha_onload&hl=' . $language . '&render=explicit', array('jquery'), $this->version, true);
+                wp_register_script('uwp_recaptcha_js_api', 'https://www.google.com/recaptcha/api.js?onload=uwp_init_recaptcha&hl=' . $language . '&render=explicit', array('jquery'), $this->version, true);
 
-                add_action('wp_footer', array($this, 'add_scripts'));
+                wp_enqueue_script('uwp_recaptcha_js_api');
+
+                wp_add_inline_script( 'uwp_recaptcha_js_api', $this->inline_script() );
+
             }
         }
 
-        public function add_scripts()
-        {
-            wp_enqueue_script('uwp_recaptcha_script', UWP_RECAPTCHA_PLUGIN_URL . 'assets/js/script.js', array('jquery', 'uwp_recaptcha_js_api'), $this->version, true);
+        public function inline_script(){
+            ob_start();
+            ?>
+            <script>
+                function uwp_init_recaptcha() {
+                    if ( jQuery('.uwp-captcha-render').length) {
+                        jQuery('.uwp-captcha-render').each(function() {
+                            if(jQuery(this).html()==''){
+                                var container = jQuery(this).attr('id');
+                                if (container) {
+                                    try {
+                                        eval(container + '()');
+                                    } catch(err) {
+                                        console.log(err);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            </script>
+            <?php
+            $output = ob_get_clean();
 
-            $localize_vars = apply_filters('uwp_recaptcha_localize_vars', array());
-
-            wp_localize_script('uwp_recaptcha_script', 'uwp_recaptcha', $localize_vars);
+            /*
+			 * We only add the <script> tags for code highlighting, so we strip them from the output.
+			 */
+            return str_replace( array(
+                '<script>',
+                '</script>'
+            ), '', $output );
         }
 
         public function recaptcha_key_notices() {

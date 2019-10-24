@@ -3,8 +3,8 @@ Contributors: stiofansisland, paoltaia, ayecode
 Donate link: http://userswp.io/
 Tags: recaptcha, frontend, login, register, account, users, restrict, userswp
 Requires at least: 4.9
-Tested up to: 5.2
-Stable tag: 1.0.5
+Tested up to: 5.3
+Stable tag: 1.2.0-beta
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,11 @@ No questions so far, but don't hesitate to ask!
 TBA
 
 == Changelog ==
+
+= 1.2.0 =
+* Compatibility with new UWP core style updates - ADDED
+* Changes for new login via lightbox - ADDED
+* Icons changed to Font Awesome - ADDED
 
 = 1.0.5 =
 * reCaptcha not working on login widget on pages other than UWP pages - FIXED
