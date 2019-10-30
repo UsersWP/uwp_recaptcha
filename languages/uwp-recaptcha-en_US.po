@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: UsersWP - ReCaptcha 1.0.5\n"
+"Project-Id-Version: UsersWP - ReCaptcha 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-28 12:01+0530\n"
-"PO-Revision-Date: 2019-06-28 12:01+0530\n"
+"POT-Creation-Date: 2019-10-30 16:00+0000\n"
+"PO-Revision-Date: 2019-10-30 16:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: AyeCode <info@userswp.io>\n"
 "Language: en_US\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: admin/settings.php:6
@@ -167,46 +167,46 @@ msgstr ""
 msgid "Invisible ReCaptcha"
 msgstr ""
 
-#: includes/class-uwp-recaptcha.php:140
+#: includes/class-uwp-recaptcha.php:167
 #, php-format
 msgid ""
 "UsersWP ReCaptcha addon: API Key and API Secret not set. %sclick here%s to "
 "set one."
 msgstr ""
 
-#: includes/class-uwp-recaptcha.php:142
+#: includes/class-uwp-recaptcha.php:169
 #, php-format
 msgid "UsersWP ReCaptcha addon: API Key not set. %sclick here%s to set one."
 msgstr ""
 
-#: includes/class-uwp-recaptcha.php:144
+#: includes/class-uwp-recaptcha.php:171
 #, php-format
 msgid "UsersWP ReCaptcha addon: API Secret not set. %sclick here%s to set one."
 msgstr ""
 
-#: includes/functions.php:191
+#: includes/functions.php:214
 msgid ""
 "<strong>ERROR</strong>: reCAPTCHA verification failed. Please try again."
 msgstr ""
 
-#: includes/functions.php:208
+#: includes/functions.php:231
 msgid ""
 "<strong>reCAPTCHA ERROR</strong>: The secret parameter is missing or "
 "invalid. Please try again."
 msgstr ""
 
-#: includes/functions.php:212
+#: includes/functions.php:235
 msgid ""
 "<strong>reCAPTCHA ERROR</strong>: The response parameter is missing or "
 "invalid. Please try again."
 msgstr ""
 
-#: includes/functions.php:215
+#: includes/functions.php:238
 msgid ""
 "<strong>reCAPTCHA ERROR</strong>: The request is invalid. Please try again."
 msgstr ""
 
-#: includes/functions.php:218
+#: includes/functions.php:241
 msgid ""
 "<strong>reCAPTCHA ERROR</strong>: The response is no longer valid: either is "
 "too old or has been used previously. Please try again."
