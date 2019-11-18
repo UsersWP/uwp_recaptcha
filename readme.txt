@@ -52,6 +52,9 @@ TBA
 
 == Changelog ==
 
+= 1.2.1 =
+* Settings reset to default all the time we activate plugin - FIXED
+
 = 1.2.0 =
 * Compatibility with new UWP core style updates - ADDED
 * Changes for new login via lightbox - ADDED
