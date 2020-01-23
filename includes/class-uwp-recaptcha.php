@@ -107,7 +107,6 @@ if(!class_exists('UsersWP_Recaptcha')) {
         public function admin_enqueue_scripts(){
             if(1 == uwp_get_option('enable_recaptcha_in_wp_login_form') || 1 == uwp_get_option('enable_recaptcha_in_wp_register_form')){
                 $this->enqueue_scripts();
-                add_action('login_footer', array($this, 'add_scripts'));
             }
         }
 

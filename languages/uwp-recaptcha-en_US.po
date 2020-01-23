@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: UsersWP - ReCaptcha 1.2.0\n"
+"Project-Id-Version: UsersWP - ReCaptcha 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-30 16:00+0000\n"
-"PO-Revision-Date: 2019-10-30 16:00+0000\n"
+"POT-Creation-Date: 2020-01-23 19:46+0530\n"
+"PO-Revision-Date: 2020-01-23 19:46+0530\n"
 "Last-Translator: \n"
 "Language-Team: AyeCode <info@userswp.io>\n"
 "Language: en_US\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.2.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: admin/settings.php:6
@@ -167,19 +167,19 @@ msgstr ""
 msgid "Invisible ReCaptcha"
 msgstr ""
 
-#: includes/class-uwp-recaptcha.php:167
+#: includes/class-uwp-recaptcha.php:166
 #, php-format
 msgid ""
 "UsersWP ReCaptcha addon: API Key and API Secret not set. %sclick here%s to "
 "set one."
 msgstr ""
 
-#: includes/class-uwp-recaptcha.php:169
+#: includes/class-uwp-recaptcha.php:168
 #, php-format
 msgid "UsersWP ReCaptcha addon: API Key not set. %sclick here%s to set one."
 msgstr ""
 
-#: includes/class-uwp-recaptcha.php:171
+#: includes/class-uwp-recaptcha.php:170
 #, php-format
 msgid "UsersWP ReCaptcha addon: API Secret not set. %sclick here%s to set one."
 msgstr ""
